@@ -219,7 +219,6 @@ export function VideoPlayer({
               preload: 'auto',
               playsInline: true,
               'webkit-playsinline': 'true',
-              crossOrigin: 'anonymous',
             },
           },
         }}
