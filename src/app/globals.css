@@ -572,14 +572,50 @@
   }
 }
 
-/* エッジ（接続線）をタッチしやすく */
+/* エッジ（接続線）を太く可愛く */
 @media (max-width: 1024px) {
   .react-flow__edge-path {
-    stroke-width: 4px;
+    stroke-width: 6px !important;
+    stroke: oklch(0.70 0.15 280) !important;
+    stroke-linecap: round;
+    filter: drop-shadow(0 2px 4px oklch(0.70 0.15 280 / 0.3));
   }
 
   .react-flow__edge:hover .react-flow__edge-path,
   .react-flow__edge.selected .react-flow__edge-path {
-    stroke-width: 6px;
+    stroke-width: 8px !important;
+    stroke: oklch(0.65 0.20 280) !important;
+    filter: drop-shadow(0 3px 6px oklch(0.65 0.20 280 / 0.4));
+  }
+
+  /* 接続中の線 */
+  .react-flow__connection-path {
+    stroke-width: 6px !important;
+    stroke: oklch(0.75 0.18 25) !important;
+    stroke-dasharray: 8 4;
+    animation: edge-dash 0.5s linear infinite;
+  }
+}
+
+/* 小さいスマホ向けさらに太く */
+@media (max-width: 480px) {
+  .react-flow__edge-path {
+    stroke-width: 8px !important;
+  }
+
+  .react-flow__edge:hover .react-flow__edge-path,
+  .react-flow__edge.selected .react-flow__edge-path {
+    stroke-width: 10px !important;
+  }
+
+  .react-flow__connection-path {
+    stroke-width: 8px !important;
+  }
+}
+
+/* 接続線のダッシュアニメーション */
+@keyframes edge-dash {
+  to {
+    stroke-dashoffset: -12;
   }
 }
