@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import type { OnProgressProps } from 'react-player/base';
+import { Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { VideoLoadingState } from '@/types';
 
@@ -73,6 +74,8 @@ export function VideoPlayer({
   const playerRef = useRef<ReactPlayer>(null);
   const [loadingState, setLoadingState] = useState<VideoLoadingState>('idle');
   const [hasTriggeredTimeReached, setHasTriggeredTimeReached] = useState(false);
+  const [showTapToPlay, setShowTapToPlay] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   // URLが空の場合のログ
   if (!url) {
@@ -82,26 +85,43 @@ export function VideoPlayer({
   // 動画読み込み開始
   const handleStart = useCallback(() => {
     setLoadingState('loading');
+    setShowTapToPlay(false);
   }, []);
 
   // 動画読み込み完了
   const handleReady = useCallback(() => {
     setLoadingState('ready');
+    setShowTapToPlay(false);
     onReady?.();
   }, [onReady]);
 
   // エラー処理
   const handleError = useCallback(
     (error: unknown) => {
-      console.error('[VideoPlayer] Error loading video:', { url, error });
+      console.error('[VideoPlayer] Error loading video:', { url, error, retryCount });
+
+      // 初回エラー時はモバイルでの自動再生失敗の可能性があるため、タップして再生を表示
+      if (retryCount === 0) {
+        setShowTapToPlay(true);
+        setLoadingState('ready'); // エラー状態にせず、タップ待ち状態に
+        return;
+      }
+
       setLoadingState('error');
       // react-playerのエラーはunknown型で渡されることがあるため、Error型に変換
       const errorInstance =
         error instanceof Error ? error : new Error(String(error));
       onError?.(errorInstance);
     },
-    [onError, url]
+    [onError, url, retryCount]
   );
+
+  // タップして再生
+  const handleTapToPlay = useCallback(() => {
+    setShowTapToPlay(false);
+    setRetryCount((c) => c + 1);
+    onPlay?.();
+  }, [onPlay]);
 
   // 再生位置更新
   const handleProgress = useCallback(
@@ -129,6 +149,8 @@ export function VideoPlayer({
     queueMicrotask(() => {
       setHasTriggeredTimeReached(false);
       setLoadingState('idle');
+      setShowTapToPlay(false);
+      setRetryCount(0);
     });
   }, [url]);
 
@@ -159,6 +181,22 @@ export function VideoPlayer({
         </div>
       )}
 
+      {/* モバイル用タップして再生オーバーレイ */}
+      {showTapToPlay && (
+        <button
+          onClick={handleTapToPlay}
+          className="absolute inset-0 flex items-center justify-center bg-black/60 z-10 cursor-pointer"
+          aria-label="タップして再生"
+        >
+          <div className="flex flex-col items-center gap-3 text-white">
+            <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center">
+              <Play className="w-10 h-10 text-white fill-white" />
+            </div>
+            <p className="text-lg font-medium">タップして再生</p>
+          </div>
+        </button>
+      )}
+
       <ReactPlayer
         ref={playerRef}
         url={url}
@@ -178,10 +216,14 @@ export function VideoPlayer({
         {...(onDuration ? { onDuration } : {})}
         onError={handleError}
         progressInterval={100} // 100msごとに進捗更新
+        playsinline
         config={{
           file: {
             attributes: {
               preload: 'auto',
+              playsInline: true,
+              'webkit-playsinline': 'true',
+              crossOrigin: 'anonymous',
             },
           },
         }}
