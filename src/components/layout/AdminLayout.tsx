@@ -9,8 +9,6 @@ import { cn } from '@/lib/utils';
 
 /**
  * AdminLayout component Props
- * Design doc: DESIGN-FE-2026-001 Section 4.3
- * Task: phase4-006-admin-page.md
  */
 export interface AdminLayoutProps {
   /** Children */
@@ -27,14 +25,7 @@ interface NavItem {
 }
 
 /**
- * Admin layout with sidebar navigation
- * Provides consistent navigation and user info display for admin pages
- *
- * Features:
- * - Sidebar with navigation items
- * - User info display with role
- * - Logout button
- * - Active navigation highlighting
+ * Admin layout with pop sidebar navigation
  */
 export function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname();
@@ -90,14 +81,24 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-[oklch(0.98_0.005_280)]">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white flex flex-col">
-        <div className="p-4 border-b border-gray-800">
-          <h1 className="text-xl font-bold">Admin Panel</h1>
+      <aside className="w-72 bg-white flex flex-col border-r border-gray-100" style={{ boxShadow: '4px 0 20px -5px rgba(0, 0, 0, 0.05)' }}>
+        {/* Logo */}
+        <div className="p-6 border-b border-gray-100">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
+            <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
+              InteractiveFlow
+            </span>
+          </Link>
         </div>
 
+        {/* Navigation */}
         <nav className="flex-1 p-4" aria-label="Main navigation">
+          <p className="px-4 mb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            Menu
+          </p>
           <ul className="space-y-2">
             {navItems.map((item) => {
               const isActive = pathname.startsWith(item.href);
@@ -106,15 +107,23 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   <Link
                     href={item.href}
                     className={cn(
-                      'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors',
+                      'flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group',
                       isActive
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-300 hover:bg-gray-800'
+                        ? 'bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] text-white shadow-lg shadow-[oklch(0.75_0.18_25)]/30'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     )}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    {renderIcon(item.icon)}
-                    <span>{item.label}</span>
+                    <span className={cn(
+                      'transition-transform duration-300',
+                      isActive ? 'scale-110' : 'group-hover:scale-110'
+                    )}>
+                      {renderIcon(item.icon)}
+                    </span>
+                    <span className="font-medium">{item.label}</span>
+                    {isActive && (
+                      <span className="ml-auto h-2 w-2 rounded-full bg-white animate-pulse" />
+                    )}
                   </Link>
                 </li>
               );
@@ -122,24 +131,41 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-gray-800">
-          <div className="mb-4">
-            <p className="text-sm text-gray-400 truncate">{user?.email}</p>
-            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+        {/* User section */}
+        <div className="p-4 border-t border-gray-100">
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)] flex items-center justify-center text-white font-bold shadow-lg">
+                {user?.email?.[0]?.toUpperCase() ?? 'U'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{user?.email}</p>
+                <p className="text-xs text-gray-500 capitalize flex items-center gap-1">
+                  <span className={cn(
+                    'h-2 w-2 rounded-full',
+                    user?.role === 'admin' ? 'bg-[oklch(0.75_0.18_25)]' : 'bg-[oklch(0.78_0.16_195)]'
+                  )} />
+                  {user?.role}
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full rounded-xl border-2 border-gray-200 hover:border-[oklch(0.75_0.18_25)] hover:text-[oklch(0.75_0.18_25)] transition-all"
+              onClick={() => signOut({ callbackUrl: '/login' })}
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Logout
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={() => signOut({ callbackUrl: '/login' })}
-          >
-            Logout
-          </Button>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 bg-gray-100 dark:bg-gray-950">{children}</main>
+      <main className="flex-1 overflow-auto">{children}</main>
     </div>
   );
 }
