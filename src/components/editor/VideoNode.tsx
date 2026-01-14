@@ -49,14 +49,14 @@ export const VideoNode = memo(function VideoNode({
     <Card
       className={cn(
         'w-[200px] transition-shadow',
-        selected && 'ring-2 ring-blue-500 shadow-lg'
+        selected && 'ring-2 ring-[oklch(0.45_0.15_165)] shadow-lg'
       )}
     >
       {/* 入力ハンドル */}
       <Handle
         type="target"
         position={Position.Top}
-        className="w-3 h-3 bg-gray-400 border-2 border-white"
+        className="w-3 h-3 bg-[oklch(0.80_0.12_165)] border-2 border-white"
       />
 
       <CardHeader className="p-3 pb-2">
@@ -78,10 +78,10 @@ export const VideoNode = memo(function VideoNode({
             />
           </div>
         ) : data.videoUrl ? (
-          <div className="aspect-video bg-green-100 rounded flex items-center justify-center mb-2">
+          <div className="aspect-video bg-[oklch(0.92_0.08_165)] rounded flex items-center justify-center mb-2">
             <div className="text-center">
               <svg
-                className="w-8 h-8 mx-auto text-green-600 mb-1"
+                className="w-8 h-8 mx-auto text-[oklch(0.45_0.15_165)] mb-1"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -94,7 +94,7 @@ export const VideoNode = memo(function VideoNode({
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span className="text-green-700 text-xs">動画アップロード済み</span>
+              <span className="text-[oklch(0.35_0.12_165)] text-xs">動画アップロード済み</span>
             </div>
           </div>
         ) : (
@@ -122,7 +122,7 @@ export const VideoNode = memo(function VideoNode({
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-3 h-3 bg-blue-500 border-2 border-white"
+        className="w-3 h-3 bg-[oklch(0.45_0.15_165)] border-2 border-white"
       />
     </Card>
   );

@@ -88,7 +88,7 @@ export default async function DashboardPage() {
           </div>
           <Button
             asChild
-            className="bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-xl sm:rounded-2xl font-semibold shadow-lg shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 h-11 sm:h-12 px-4 sm:px-6 w-full sm:w-auto"
+            className="bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white rounded-xl sm:rounded-2xl font-semibold shadow-lg shadow-[oklch(0.45_0.15_165)]/30 transition-all hover:scale-105 h-11 sm:h-12 px-4 sm:px-6 w-full sm:w-auto"
           >
             <Link href="/editor/new" className="flex items-center justify-center gap-2">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,7 +111,7 @@ export default async function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
           }
-          gradient="bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)]"
+          gradient="bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]"
         />
 
         <StatCard
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           }
-          gradient="bg-gradient-to-r from-[oklch(0.82_0.14_165)] to-[oklch(0.78_0.16_195)]"
+          gradient="bg-gradient-to-r from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]"
         />
 
         <StatCard
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           }
-          gradient="bg-gradient-to-r from-[oklch(0.78_0.16_195)] to-[oklch(0.65_0.22_295)]"
+          gradient="bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]"
         />
 
         <StatCard
@@ -146,7 +146,7 @@ export default async function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
             </svg>
           }
-          gradient="bg-gradient-to-r from-[oklch(0.90_0.18_95)] to-[oklch(0.75_0.18_25)]"
+          gradient="bg-gradient-to-r from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]"
         />
       </div>
 
@@ -154,7 +154,7 @@ export default async function DashboardPage() {
       <Card className="mb-6 sm:mb-8 border-0 bg-white rounded-2xl sm:rounded-3xl overflow-hidden" style={{ boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 20px 40px -15px rgba(0, 0, 0, 0.1)' }}>
         <CardHeader className="border-b border-gray-100 p-4 sm:p-6">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)] flex items-center justify-center text-white shadow-lg">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] flex items-center justify-center text-white shadow-lg">
               <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
@@ -182,11 +182,11 @@ export default async function DashboardPage() {
                   : 0;
 
                 const gradients = [
-                  'from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)]',
-                  'from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)]',
-                  'from-[oklch(0.90_0.18_95)] to-[oklch(0.75_0.18_25)]',
-                  'from-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)]',
-                  'from-[oklch(0.82_0.14_165)] to-[oklch(0.78_0.16_195)]',
+                  'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]',
+                  'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]',
+                  'from-[oklch(0.45_0.15_165)] to-[oklch(0.60_0.13_165)]',
+                  'from-[oklch(0.60_0.13_165)] to-[oklch(0.80_0.12_165)]',
+                  'from-[oklch(0.80_0.12_165)] to-[oklch(0.60_0.13_165)]',
                 ];
 
                 return (
@@ -289,7 +289,7 @@ export default async function DashboardPage() {
       <Card className="border-0 bg-white rounded-2xl sm:rounded-3xl overflow-hidden" style={{ boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 20px 40px -15px rgba(0, 0, 0, 0.1)' }}>
         <CardHeader className="border-b border-gray-100 p-4 sm:p-6">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] flex items-center justify-center text-white shadow-lg">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] flex items-center justify-center text-white shadow-lg">
               <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
               </svg>
@@ -309,7 +309,7 @@ export default async function DashboardPage() {
               <p className="text-gray-400 text-sm mt-1">最初のプロジェクトを作成しましょう</p>
               <Button
                 asChild
-                className="mt-4 bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-xl font-semibold shadow-lg transition-all hover:scale-105"
+                className="mt-4 bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white rounded-xl font-semibold shadow-lg transition-all hover:scale-105"
               >
                 <Link href="/editor/new">プロジェクトを作成</Link>
               </Button>
@@ -318,11 +318,11 @@ export default async function DashboardPage() {
             <div className="space-y-3 sm:space-y-4">
               {projects.slice(0, 5).map((project, index) => {
                 const gradients = [
-                  'from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)]',
-                  'from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)]',
-                  'from-[oklch(0.90_0.18_95)] to-[oklch(0.75_0.18_25)]',
-                  'from-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)]',
-                  'from-[oklch(0.82_0.14_165)] to-[oklch(0.78_0.16_195)]',
+                  'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]',
+                  'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]',
+                  'from-[oklch(0.45_0.15_165)] to-[oklch(0.60_0.13_165)]',
+                  'from-[oklch(0.60_0.13_165)] to-[oklch(0.80_0.12_165)]',
+                  'from-[oklch(0.80_0.12_165)] to-[oklch(0.60_0.13_165)]',
                 ];
 
                 return (
@@ -355,7 +355,7 @@ export default async function DashboardPage() {
                           className={cn(
                             'px-2.5 py-1 text-xs font-semibold rounded-lg',
                             project.isPublished
-                              ? 'bg-[oklch(0.92_0.10_165)] text-[oklch(0.45_0.12_165)]'
+                              ? 'bg-[oklch(0.90_0.08_165)] text-[oklch(0.35_0.12_165)]'
                               : 'bg-gray-100 text-gray-600'
                           )}
                         >
@@ -392,7 +392,7 @@ export default async function DashboardPage() {
                           className={cn(
                             'px-3 py-1.5 text-xs font-semibold rounded-xl',
                             project.isPublished
-                              ? 'bg-[oklch(0.92_0.10_165)] text-[oklch(0.45_0.12_165)]'
+                              ? 'bg-[oklch(0.90_0.08_165)] text-[oklch(0.35_0.12_165)]'
                               : 'bg-gray-100 text-gray-600'
                           )}
                         >

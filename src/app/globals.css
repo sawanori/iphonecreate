@@ -128,116 +128,104 @@
   to { transform: rotate(360deg); }
 }
 
-/* Pop Color Palette - Vibrant & Playful */
+/* Emerald Green Color Palette - Elegant & Refined */
 :root {
   --radius: 1rem;
 
-  /* Primary Colors - Coral Pink */
-  --coral: oklch(0.75 0.18 25);
-  --coral-light: oklch(0.85 0.14 25);
-  --coral-dark: oklch(0.65 0.20 25);
+  /* Primary Colors - Dark Emerald Green */
+  --emerald-dark: oklch(0.45 0.15 165);
+  --emerald-dark-hover: oklch(0.40 0.16 165);
+  --emerald-dark-light: oklch(0.50 0.14 165);
 
-  /* Secondary - Electric Cyan */
-  --cyan: oklch(0.78 0.16 195);
-  --cyan-light: oklch(0.88 0.12 195);
-  --cyan-dark: oklch(0.68 0.18 195);
+  /* Secondary - Light Emerald Green */
+  --emerald-light: oklch(0.80 0.12 165);
+  --emerald-light-hover: oklch(0.75 0.13 165);
+  --emerald-light-pale: oklch(0.85 0.10 165);
 
-  /* Accent - Sunny Yellow */
-  --yellow: oklch(0.90 0.18 95);
-  --yellow-light: oklch(0.95 0.14 95);
-  --yellow-dark: oklch(0.80 0.20 95);
-
-  /* Pop Purple */
-  --purple: oklch(0.65 0.22 295);
-  --purple-light: oklch(0.80 0.16 295);
-  --purple-dark: oklch(0.55 0.24 295);
-
-  /* Pop Green - Mint */
-  --mint: oklch(0.82 0.14 165);
-  --mint-light: oklch(0.92 0.10 165);
-  --mint-dark: oklch(0.72 0.16 165);
+  /* Black with Emerald Tint */
+  --emerald-black: oklch(0.15 0.02 165);
+  --emerald-black-light: oklch(0.20 0.02 165);
+  --emerald-black-dark: oklch(0.12 0.02 165);
 
   /* Base colors */
-  --background: oklch(0.99 0.005 280);
-  --foreground: oklch(0.20 0.02 280);
+  --background: oklch(0.99 0.005 165);
+  --foreground: oklch(0.15 0.02 165);
 
   /* Semantic */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.02 280);
+  --card-foreground: oklch(0.15 0.02 165);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.02 280);
-  --primary: var(--coral);
+  --popover-foreground: oklch(0.15 0.02 165);
+  --primary: var(--emerald-dark);
   --primary-foreground: oklch(1 0 0);
-  --secondary: var(--cyan);
-  --secondary-foreground: oklch(0.15 0.02 195);
-  --muted: oklch(0.96 0.01 280);
-  --muted-foreground: oklch(0.50 0.02 280);
-  --accent: var(--yellow);
-  --accent-foreground: oklch(0.20 0.03 95);
-  --destructive: oklch(0.60 0.22 25);
-  --border: oklch(0.92 0.02 280);
-  --input: oklch(0.94 0.01 280);
-  --ring: var(--coral);
+  --secondary: var(--emerald-light);
+  --secondary-foreground: oklch(0.15 0.02 165);
+  --muted: oklch(0.96 0.01 165);
+  --muted-foreground: oklch(0.50 0.02 165);
+  --accent: var(--emerald-light);
+  --accent-foreground: oklch(0.15 0.03 165);
+  --destructive: oklch(0.55 0.20 25);
+  --border: oklch(0.92 0.02 165);
+  --input: oklch(0.94 0.01 165);
+  --ring: var(--emerald-dark);
 
   /* Chart colors */
-  --chart-1: var(--coral);
-  --chart-2: var(--cyan);
-  --chart-3: var(--yellow);
-  --chart-4: var(--purple);
-  --chart-5: var(--mint);
+  --chart-1: var(--emerald-dark);
+  --chart-2: var(--emerald-light);
+  --chart-3: oklch(0.60 0.14 165);
+  --chart-4: oklch(0.70 0.13 165);
+  --chart-5: oklch(0.35 0.12 165);
 
   /* Sidebar */
-  --sidebar: oklch(0.98 0.01 280);
-  --sidebar-foreground: oklch(0.25 0.02 280);
-  --sidebar-primary: var(--coral);
+  --sidebar: oklch(0.98 0.01 165);
+  --sidebar-foreground: oklch(0.20 0.02 165);
+  --sidebar-primary: var(--emerald-dark);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.95 0.02 25);
-  --sidebar-accent-foreground: oklch(0.25 0.02 280);
-  --sidebar-border: oklch(0.90 0.02 280);
-  --sidebar-ring: var(--coral);
+  --sidebar-accent: oklch(0.95 0.02 165);
+  --sidebar-accent-foreground: oklch(0.20 0.02 165);
+  --sidebar-border: oklch(0.90 0.02 165);
+  --sidebar-ring: var(--emerald-dark);
 
   /* Video player custom */
   --video-overlay-bg: rgba(0, 0, 0, 0.6);
   --choice-button-bg: rgba(255, 255, 255, 0.95);
-  --timer-progress-bg: var(--coral);
+  --timer-progress-bg: var(--emerald-dark);
 
   /* Gradients */
-  --gradient-coral-purple: linear-gradient(135deg, var(--coral) 0%, var(--purple) 100%);
-  --gradient-cyan-mint: linear-gradient(135deg, var(--cyan) 0%, var(--mint) 100%);
-  --gradient-sunset: linear-gradient(135deg, var(--yellow) 0%, var(--coral) 50%, var(--purple) 100%);
-  --gradient-ocean: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%);
-  --gradient-pop: linear-gradient(135deg, var(--coral) 0%, var(--purple) 35%, var(--cyan) 70%, var(--mint) 100%);
+  --gradient-emerald: linear-gradient(135deg, var(--emerald-dark) 0%, var(--emerald-light) 100%);
+  --gradient-emerald-dark: linear-gradient(135deg, var(--emerald-black) 0%, var(--emerald-dark) 100%);
+  --gradient-emerald-light: linear-gradient(135deg, var(--emerald-light) 0%, var(--emerald-light-pale) 100%);
 }
 
 .dark {
-  --background: oklch(0.15 0.02 280);
-  --foreground: oklch(0.95 0.01 280);
-  --card: oklch(0.20 0.02 280);
-  --card-foreground: oklch(0.95 0.01 280);
-  --popover: oklch(0.20 0.02 280);
-  --popover-foreground: oklch(0.95 0.01 280);
-  --primary: var(--coral-light);
-  --primary-foreground: oklch(0.15 0.02 280);
-  --secondary: var(--cyan-light);
-  --secondary-foreground: oklch(0.15 0.02 195);
-  --muted: oklch(0.25 0.02 280);
-  --muted-foreground: oklch(0.65 0.02 280);
-  --accent: var(--yellow);
-  --accent-foreground: oklch(0.15 0.03 95);
-  --destructive: oklch(0.65 0.20 25);
-  --border: oklch(0.30 0.02 280);
-  --input: oklch(0.28 0.02 280);
-  --ring: var(--coral-light);
+  --background: oklch(0.12 0.02 165);
+  --foreground: oklch(0.95 0.01 165);
+  --card: oklch(0.18 0.02 165);
+  --card-foreground: oklch(0.95 0.01 165);
+  --popover: oklch(0.18 0.02 165);
+  --popover-foreground: oklch(0.95 0.01 165);
+  --primary: var(--emerald-light);
+  --primary-foreground: oklch(0.12 0.02 165);
+  --secondary: var(--emerald-dark);
+  --secondary-foreground: oklch(0.95 0.01 165);
+  --muted: oklch(0.22 0.02 165);
+  --muted-foreground: oklch(0.65 0.02 165);
+  --accent: var(--emerald-light);
+  --accent-foreground: oklch(0.12 0.03 165);
+  --destructive: oklch(0.60 0.18 25);
+  --border: oklch(0.28 0.02 165);
+  --input: oklch(0.25 0.02 165);
+  --ring: var(--emerald-light);
 
   /* Sidebar dark */
-  --sidebar: oklch(0.18 0.02 280);
-  --sidebar-foreground: oklch(0.90 0.01 280);
-  --sidebar-primary: var(--coral-light);
-  --sidebar-primary-foreground: oklch(0.15 0.02 280);
-  --sidebar-accent: oklch(0.25 0.03 25);
-  --sidebar-accent-foreground: oklch(0.90 0.01 280);
-  --sidebar-border: oklch(0.28 0.02 280);
-  --sidebar-ring: var(--coral-light);
+  --sidebar: oklch(0.15 0.02 165);
+  --sidebar-foreground: oklch(0.90 0.01 165);
+  --sidebar-primary: var(--emerald-light);
+  --sidebar-primary-foreground: oklch(0.12 0.02 165);
+  --sidebar-accent: oklch(0.22 0.03 165);
+  --sidebar-accent-foreground: oklch(0.90 0.01 165);
+  --sidebar-border: oklch(0.25 0.02 165);
+  --sidebar-ring: var(--emerald-light);
 }
 
 @layer base {
@@ -256,8 +244,8 @@
 
   /* Selection styling */
   ::selection {
-    background: oklch(0.75 0.18 25 / 0.3);
-    color: oklch(0.20 0.02 280);
+    background: oklch(0.45 0.15 165 / 0.3);
+    color: oklch(0.15 0.02 165);
   }
 }
 
@@ -319,21 +307,21 @@
 
   /* Gradient text */
   .gradient-text {
-    background: var(--gradient-coral-purple);
+    background: var(--gradient-emerald);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-text-ocean {
-    background: var(--gradient-ocean);
+    background: var(--gradient-emerald);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-text-sunset {
-    background: var(--gradient-sunset);
+    background: var(--gradient-emerald);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -520,22 +508,22 @@
     transition: all 0.2s ease;
   }
 
-  /* ソースハンドル（出力）の色強調 */
+  /* ソースハンドル（出力）の色強調 - 濃いエメラルド */
   .react-flow__handle.react-flow__handle-bottom {
-    background-color: oklch(0.65 0.20 250) !important;
-    box-shadow: 0 0 0 4px oklch(0.65 0.20 250 / 0.3);
+    background-color: oklch(0.45 0.15 165) !important;
+    box-shadow: 0 0 0 4px oklch(0.45 0.15 165 / 0.3);
   }
 
-  /* ターゲットハンドル（入力）の色強調 */
+  /* ターゲットハンドル（入力）の色強調 - 薄いエメラルド */
   .react-flow__handle.react-flow__handle-top {
-    background-color: oklch(0.55 0.15 150) !important;
-    box-shadow: 0 0 0 4px oklch(0.55 0.15 150 / 0.3);
+    background-color: oklch(0.80 0.12 165) !important;
+    box-shadow: 0 0 0 4px oklch(0.80 0.12 165 / 0.3);
   }
 
   /* タッチ時のハンドル拡大エフェクト */
   .react-flow__handle:active {
     transform: scale(1.5);
-    box-shadow: 0 0 0 8px oklch(0.65 0.20 250 / 0.4);
+    box-shadow: 0 0 0 8px oklch(0.45 0.15 165 / 0.4);
   }
 
   /* 接続中のハンドルハイライト */
@@ -545,8 +533,8 @@
 
   /* 接続可能なハンドルのハイライト */
   .react-flow__handle.connectingto {
-    background-color: oklch(0.70 0.20 145) !important;
-    box-shadow: 0 0 0 8px oklch(0.70 0.20 145 / 0.5);
+    background-color: oklch(0.80 0.12 165) !important;
+    box-shadow: 0 0 0 8px oklch(0.80 0.12 165 / 0.5);
     transform: scale(1.3);
   }
 }
@@ -563,11 +551,11 @@
 /* ハンドルのパルスアニメーション */
 @keyframes handle-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 4px oklch(0.65 0.20 250 / 0.4);
+    box-shadow: 0 0 0 4px oklch(0.45 0.15 165 / 0.4);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 0 12px oklch(0.65 0.20 250 / 0.2);
+    box-shadow: 0 0 0 12px oklch(0.45 0.15 165 / 0.2);
     transform: scale(1.2);
   }
 }
@@ -576,22 +564,22 @@
 @media (max-width: 1024px) {
   .react-flow__edge-path {
     stroke-width: 6px !important;
-    stroke: oklch(0.70 0.15 280) !important;
+    stroke: oklch(0.60 0.13 165) !important;
     stroke-linecap: round;
-    filter: drop-shadow(0 2px 4px oklch(0.70 0.15 280 / 0.3));
+    filter: drop-shadow(0 2px 4px oklch(0.60 0.13 165 / 0.3));
   }
 
   .react-flow__edge:hover .react-flow__edge-path,
   .react-flow__edge.selected .react-flow__edge-path {
     stroke-width: 8px !important;
-    stroke: oklch(0.65 0.20 280) !important;
-    filter: drop-shadow(0 3px 6px oklch(0.65 0.20 280 / 0.4));
+    stroke: oklch(0.45 0.15 165) !important;
+    filter: drop-shadow(0 3px 6px oklch(0.45 0.15 165 / 0.4));
   }
 
   /* 接続中の線 */
   .react-flow__connection-path {
     stroke-width: 6px !important;
-    stroke: oklch(0.75 0.18 25) !important;
+    stroke: oklch(0.80 0.12 165) !important;
     stroke-dasharray: 8 4;
     animation: edge-dash 0.5s linear infinite;
   }

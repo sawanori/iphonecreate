@@ -101,10 +101,10 @@ export function LoginForm({ className }: LoginFormProps) {
     }}
     >
       {/* Decorative header gradient */}
-      <div className="h-2 w-full bg-gradient-to-r from-[oklch(0.75_0.18_25)] via-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)]" />
+      <div className="h-2 w-full bg-gradient-to-r from-[oklch(0.45_0.15_165)] via-[oklch(0.60_0.13_165)] to-[oklch(0.80_0.12_165)]" />
 
       <CardHeader className="space-y-2 pt-8 pb-4">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg shadow-[oklch(0.75_0.18_25)]/30">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] shadow-lg shadow-[oklch(0.45_0.15_165)]/30">
           <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
@@ -154,7 +154,7 @@ export function LoginForm({ className }: LoginFormProps) {
                 disabled={isLoading}
                 {...register('email')}
                 className={cn(
-                  'h-14 pl-12 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:border-[oklch(0.75_0.18_25)] focus:bg-white focus:ring-4 focus:ring-[oklch(0.75_0.18_25)]/10 transition-all',
+                  'h-14 pl-12 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:border-[oklch(0.45_0.15_165)] focus:bg-white focus:ring-4 focus:ring-[oklch(0.45_0.15_165)]/10 transition-all',
                   errors.email && 'border-[oklch(0.60_0.22_25)] focus:border-[oklch(0.60_0.22_25)] focus:ring-[oklch(0.60_0.22_25)]/10'
                 )}
               />
@@ -191,7 +191,7 @@ export function LoginForm({ className }: LoginFormProps) {
                 disabled={isLoading}
                 {...register('password')}
                 className={cn(
-                  'h-14 pl-12 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:border-[oklch(0.75_0.18_25)] focus:bg-white focus:ring-4 focus:ring-[oklch(0.75_0.18_25)]/10 transition-all',
+                  'h-14 pl-12 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:border-[oklch(0.45_0.15_165)] focus:bg-white focus:ring-4 focus:ring-[oklch(0.45_0.15_165)]/10 transition-all',
                   errors.password && 'border-[oklch(0.60_0.22_25)] focus:border-[oklch(0.60_0.22_25)] focus:ring-[oklch(0.60_0.22_25)]/10'
                 )}
               />
@@ -210,7 +210,7 @@ export function LoginForm({ className }: LoginFormProps) {
         <CardFooter className="flex flex-col gap-4 px-8 pb-8 pt-4">
           <Button
             type="submit"
-            className="w-full h-14 bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white text-lg font-semibold rounded-2xl shadow-lg shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+            className="w-full h-14 bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white text-lg font-semibold rounded-2xl shadow-lg shadow-[oklch(0.45_0.15_165)]/30 transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -233,7 +233,7 @@ export function LoginForm({ className }: LoginFormProps) {
 
           <p className="text-center text-sm text-gray-500">
             Don&apos;t have an account?{' '}
-            <a href="#" className="font-semibold text-[oklch(0.65_0.22_295)] hover:text-[oklch(0.75_0.18_25)] transition-colors">
+            <a href="#" className="font-semibold text-[oklch(0.45_0.15_165)] hover:text-[oklch(0.80_0.12_165)] transition-colors">
               Sign up for free
             </a>
           </p>

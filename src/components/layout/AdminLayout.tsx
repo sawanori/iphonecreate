@@ -114,8 +114,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       <header className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="flex items-center justify-between px-4 h-16">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-md" />
-            <span className="text-lg font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] shadow-md" />
+            <span className="text-lg font-bold bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] bg-clip-text text-transparent">
               AかBか
             </span>
           </Link>
@@ -159,8 +159,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         {/* Logo */}
         <div className="p-6 border-b border-gray-100">
           <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
-            <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] shadow-lg" />
+            <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] bg-clip-text text-transparent">
               AかBか
             </span>
           </Link>
@@ -181,7 +181,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     className={cn(
                       'flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group',
                       isActive
-                        ? 'bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] text-white shadow-lg shadow-[oklch(0.75_0.18_25)]/30'
+                        ? 'bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] text-white shadow-lg shadow-[oklch(0.45_0.15_165)]/30'
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     )}
                     aria-current={isActive ? 'page' : undefined}
@@ -207,7 +207,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <div className="p-4 border-t border-gray-100">
           <div className="p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white">
             <div className="flex items-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)] flex items-center justify-center text-white font-bold shadow-lg">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] flex items-center justify-center text-white font-bold shadow-lg">
                 {user?.email?.[0]?.toUpperCase() ?? 'U'}
               </div>
               <div className="flex-1 min-w-0">
@@ -215,7 +215,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <p className="text-xs text-gray-500 capitalize flex items-center gap-1">
                   <span className={cn(
                     'h-2 w-2 rounded-full',
-                    user?.role === 'admin' ? 'bg-[oklch(0.75_0.18_25)]' : 'bg-[oklch(0.78_0.16_195)]'
+                    user?.role === 'admin' ? 'bg-[oklch(0.45_0.15_165)]' : 'bg-[oklch(0.80_0.12_165)]'
                   )} />
                   {user?.role === 'admin' ? '管理者' : '視聴者'}
                 </p>
@@ -224,7 +224,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <Button
               variant="outline"
               size="sm"
-              className="w-full rounded-xl border-2 border-gray-200 hover:border-[oklch(0.75_0.18_25)] hover:text-[oklch(0.75_0.18_25)] transition-all"
+              className="w-full rounded-xl border-2 border-gray-200 hover:border-[oklch(0.45_0.15_165)] hover:text-[oklch(0.45_0.15_165)] transition-all"
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
               <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

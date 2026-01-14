@@ -63,11 +63,11 @@ function FeatureCard({
   }, [delay]);
 
   const colorClasses = {
-    coral: 'from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:shadow-[oklch(0.75_0.18_25)]/30',
-    cyan: 'from-[oklch(0.78_0.16_195)] to-[oklch(0.65_0.22_295)] hover:shadow-[oklch(0.78_0.16_195)]/30',
-    yellow: 'from-[oklch(0.90_0.18_95)] to-[oklch(0.75_0.18_25)] hover:shadow-[oklch(0.90_0.18_95)]/30',
-    purple: 'from-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)] hover:shadow-[oklch(0.65_0.22_295)]/30',
-    mint: 'from-[oklch(0.82_0.14_165)] to-[oklch(0.78_0.16_195)] hover:shadow-[oklch(0.82_0.14_165)]/30',
+    coral: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:shadow-[oklch(0.45_0.15_165)]/30',
+    cyan: 'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)] hover:shadow-[oklch(0.80_0.12_165)]/30',
+    yellow: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:shadow-[oklch(0.45_0.15_165)]/30',
+    purple: 'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)] hover:shadow-[oklch(0.80_0.12_165)]/30',
+    mint: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:shadow-[oklch(0.45_0.15_165)]/30',
   };
 
   return (
@@ -112,9 +112,9 @@ function StepCard({
   color: 'coral' | 'cyan' | 'purple';
 }) {
   const colorClasses = {
-    coral: 'from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.20_25)] shadow-[oklch(0.75_0.18_25)]/30',
-    cyan: 'from-[oklch(0.78_0.16_195)] to-[oklch(0.68_0.18_195)] shadow-[oklch(0.78_0.16_195)]/30',
-    purple: 'from-[oklch(0.65_0.22_295)] to-[oklch(0.55_0.24_295)] shadow-[oklch(0.65_0.22_295)]/30',
+    coral: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.35_0.12_165)] shadow-[oklch(0.45_0.15_165)]/30',
+    cyan: 'from-[oklch(0.80_0.12_165)] to-[oklch(0.70_0.13_165)] shadow-[oklch(0.80_0.12_165)]/30',
+    purple: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] shadow-[oklch(0.45_0.15_165)]/30',
   };
 
   return (
@@ -144,13 +144,11 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_280)] text-gray-900 overflow-hidden">
+    <div className="min-h-screen bg-[oklch(0.99_0.005_165)] text-gray-900 overflow-hidden">
       {/* Decorative Blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-[oklch(0.75_0.18_25)] opacity-20 blob animate-float" />
-        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-[oklch(0.78_0.16_195)] opacity-15 blob-2" style={{ animationDelay: '-2s' }} />
-        <div className="absolute bottom-20 right-1/4 w-[400px] h-[400px] bg-[oklch(0.90_0.18_95)] opacity-15 blob" style={{ animationDelay: '-4s' }} />
-        <div className="absolute -bottom-20 -left-20 w-[350px] h-[350px] bg-[oklch(0.65_0.22_295)] opacity-10 blob-2" />
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-[oklch(0.45_0.15_165)] opacity-15 blob animate-float" />
+        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-[oklch(0.80_0.12_165)] opacity-15 blob-2" style={{ animationDelay: '-2s' }} />
       </div>
 
       {/* Navigation */}
@@ -159,8 +157,8 @@ export default function LandingPage() {
           <div className="container mx-auto glass rounded-2xl px-6 py-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
-                <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] shadow-lg" />
+                <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] bg-clip-text text-transparent">
                   AかBか
                 </span>
               </div>
@@ -215,7 +213,7 @@ export default function LandingPage() {
               <Link href="/login?callbackUrl=/dashboard">
                 <Button
                   size="lg"
-                  className="h-12 px-4 text-sm sm:h-16 sm:px-10 sm:text-lg bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-xl sm:rounded-2xl font-semibold shadow-xl shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
+                  className="h-12 px-4 text-sm sm:h-16 sm:px-10 sm:text-lg bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white rounded-xl sm:rounded-2xl font-semibold shadow-xl shadow-[oklch(0.45_0.15_165)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
                 >
                   無料で始める
                   <svg className="ml-1 sm:ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -228,7 +226,7 @@ export default function LandingPage() {
                 variant="outline"
                 className="h-12 px-4 text-sm sm:h-16 sm:px-10 sm:text-lg border-2 border-gray-200 bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl sm:rounded-2xl font-semibold transition-all hover:scale-105 group"
               >
-                <svg className="mr-1 sm:mr-2 h-5 w-5 sm:h-6 sm:w-6 text-[oklch(0.75_0.18_25)]" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="mr-1 sm:mr-2 h-5 w-5 sm:h-6 sm:w-6 text-[oklch(0.45_0.15_165)]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
                 デモを見る
@@ -246,16 +244,16 @@ export default function LandingPage() {
             <div className="relative rounded-3xl bg-white p-3 shadow-2xl shadow-gray-200/50">
               {/* Browser dots */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
-                <div className="h-3 w-3 rounded-full bg-[oklch(0.75_0.18_25)]" />
-                <div className="h-3 w-3 rounded-full bg-[oklch(0.90_0.18_95)]" />
-                <div className="h-3 w-3 rounded-full bg-[oklch(0.82_0.14_165)]" />
+                <div className="h-3 w-3 rounded-full bg-[oklch(0.45_0.15_165)]" />
+                <div className="h-3 w-3 rounded-full bg-[oklch(0.60_0.13_165)]" />
+                <div className="h-3 w-3 rounded-full bg-[oklch(0.80_0.12_165)]" />
               </div>
               <div className="aspect-video rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
                 <div className="relative h-full w-full flex items-center justify-center">
                   {/* Play button */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center px-4">
-                      <div className="mx-auto mb-4 sm:mb-6 flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-2xl shadow-[oklch(0.75_0.18_25)]/40 transition-transform hover:scale-110 cursor-pointer">
+                      <div className="mx-auto mb-4 sm:mb-6 flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] shadow-2xl shadow-[oklch(0.45_0.15_165)]/40 transition-transform hover:scale-110 cursor-pointer">
                         <svg className="h-8 w-8 sm:h-12 sm:w-12 text-white ml-0.5 sm:ml-1" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
                         </svg>
@@ -265,10 +263,10 @@ export default function LandingPage() {
                   </div>
                   {/* Choice buttons */}
                   <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-2 sm:gap-4 w-[calc(100%-2rem)] sm:w-auto">
-                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.78_0.16_195)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
+                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.60_0.13_165)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.45_0.15_165)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
                       選択肢 A
                     </div>
-                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.65_0.22_295)] to-[oklch(0.75_0.18_25)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.65_0.22_295)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
+                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.80_0.12_165)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
                       選択肢 B
                     </div>
                   </div>
@@ -285,10 +283,10 @@ export default function LandingPage() {
           <div className="rounded-3xl bg-white p-8 md:p-12 shadow-xl">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               {[
-                { value: 98, suffix: '%', label: '学習定着率の向上', color: 'from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)]' },
-                { value: 3, suffix: '倍', label: 'エンゲージメント', color: 'from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)]' },
-                { value: 500, suffix: '+', label: '導入企業', color: 'from-[oklch(0.90_0.18_95)] to-[oklch(0.75_0.18_25)]' },
-                { value: 50000, suffix: '+', label: '作成された動画', color: 'from-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)]' },
+                { value: 98, suffix: '%', label: '学習定着率の向上', color: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]' },
+                { value: 3, suffix: '倍', label: 'エンゲージメント', color: 'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]' },
+                { value: 500, suffix: '+', label: '導入企業', color: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]' },
+                { value: 50000, suffix: '+', label: '作成された動画', color: 'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]' },
               ].map((stat, index) => (
                 <div key={index} className="text-center group">
                   <div className={cn(
@@ -393,7 +391,7 @@ export default function LandingPage() {
 
       {/* How it Works Section */}
       <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-[oklch(0.75_0.18_25)]/5 to-white/0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-[oklch(0.45_0.15_165)]/5 to-white/0" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="mb-6 text-3xl font-extrabold sm:text-4xl lg:text-5xl">
@@ -412,14 +410,14 @@ export default function LandingPage() {
               title="動画をアップロード"
               description="既存の動画ファイルをドラッグ&ドロップでアップロード。MP4形式に対応しています。"
             />
-            <div className="ml-7 h-16 w-0.5 bg-gradient-to-b from-[oklch(0.75_0.18_25)] via-[oklch(0.78_0.16_195)] to-transparent rounded-full" />
+            <div className="ml-7 h-16 w-0.5 bg-gradient-to-b from-[oklch(0.45_0.15_165)] via-[oklch(0.80_0.12_165)] to-transparent rounded-full" />
             <StepCard
               number={2}
               color="cyan"
               title="分岐を設定"
               description="ビジュアルエディターで分岐ポイントと選択肢を設定。フローチャート形式で全体像を把握できます。"
             />
-            <div className="ml-7 h-16 w-0.5 bg-gradient-to-b from-[oklch(0.78_0.16_195)] via-[oklch(0.65_0.22_295)] to-transparent rounded-full" />
+            <div className="ml-7 h-16 w-0.5 bg-gradient-to-b from-[oklch(0.80_0.12_165)] via-[oklch(0.45_0.15_165)] to-transparent rounded-full" />
             <StepCard
               number={3}
               color="purple"
@@ -433,10 +431,10 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] opacity-10 blur-[100px]" />
+          <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] opacity-10 blur-[100px]" />
         </div>
         <div className="container relative mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center bg-white rounded-3xl p-12 shadow-2xl shadow-[oklch(0.75_0.18_25)]/10">
+          <div className="mx-auto max-w-3xl text-center bg-white rounded-3xl p-12 shadow-2xl shadow-[oklch(0.45_0.15_165)]/10">
             <h2 className="mb-6 text-3xl font-extrabold sm:text-4xl lg:text-5xl gradient-text">
               今すぐ始めましょう
             </h2>
@@ -446,7 +444,7 @@ export default function LandingPage() {
             <Link href="/login?callbackUrl=/dashboard">
               <Button
                 size="lg"
-                className="h-16 px-12 text-lg bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-2xl font-semibold shadow-xl shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
+                className="h-16 px-12 text-lg bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white rounded-2xl font-semibold shadow-xl shadow-[oklch(0.45_0.15_165)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
               >
                 無料アカウントを作成
                 <svg className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -463,20 +461,20 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] shadow-lg" />
               <span className="text-xl font-bold gradient-text">AかBか</span>
             </div>
             <p className="text-gray-500 text-sm">
               © 2026 AかBか. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="text-gray-500 hover:text-[oklch(0.75_0.18_25)] transition-colors font-medium">
+              <a href="#" className="text-gray-500 hover:text-[oklch(0.45_0.15_165)] transition-colors font-medium">
                 プライバシー
               </a>
-              <a href="#" className="text-gray-500 hover:text-[oklch(0.75_0.18_25)] transition-colors font-medium">
+              <a href="#" className="text-gray-500 hover:text-[oklch(0.45_0.15_165)] transition-colors font-medium">
                 利用規約
               </a>
-              <a href="#" className="text-gray-500 hover:text-[oklch(0.75_0.18_25)] transition-colors font-medium">
+              <a href="#" className="text-gray-500 hover:text-[oklch(0.45_0.15_165)] transition-colors font-medium">
                 お問い合わせ
               </a>
             </div>
