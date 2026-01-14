@@ -309,9 +309,9 @@ export default function LandingPage() {
       <section className="py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <h2 className="mb-6 text-3xl font-extrabold sm:text-4xl lg:text-5xl">
-              必要な機能がすべて揃った
-              <span className="block gradient-text mt-2">
+            <h2 className="mb-6 text-[clamp(1.25rem,4vw,3rem)] font-extrabold">
+              <span className="whitespace-nowrap">必要な機能がすべて揃った</span>
+              <span className="block gradient-text mt-2 whitespace-nowrap">
                 オールインワンプラットフォーム
               </span>
             </h2>
