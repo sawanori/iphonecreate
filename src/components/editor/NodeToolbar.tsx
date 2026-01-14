@@ -19,13 +19,17 @@ export interface NodeToolbarProps {
   className?: string;
   /** モバイル表示かどうか */
   isMobile?: boolean;
+  /** 動画ノード追加ハンドラー */
+  onAddVideoNode?: () => void;
+  /** 終了ノード追加ハンドラー */
+  onAddEndNode?: () => void;
 }
 
 /**
  * ノード追加ツールバー
  * ドラッグ&ドロップでノードをキャンバスに追加できる
  */
-export function NodeToolbar({ className, isMobile = false }: NodeToolbarProps) {
+export function NodeToolbar({ className, isMobile = false, onAddVideoNode, onAddEndNode }: NodeToolbarProps) {
   /**
    * ドラッグ開始時にノードタイプを設定
    */
@@ -37,7 +41,7 @@ export function NodeToolbar({ className, isMobile = false }: NodeToolbarProps) {
     event.dataTransfer.effectAllowed = 'move';
   };
 
-  // Mobile: compact horizontal layout
+  // Mobile: compact horizontal layout with click-to-add
   if (isMobile) {
     return (
       <div
@@ -50,9 +54,8 @@ export function NodeToolbar({ className, isMobile = false }: NodeToolbarProps) {
         <Button
           size="sm"
           variant="outline"
-          className="px-3"
-          draggable
-          onDragStart={(e) => handleDragStart(e, 'video')}
+          className="px-3 gap-1"
+          onClick={onAddVideoNode}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -68,14 +71,14 @@ export function NodeToolbar({ className, isMobile = false }: NodeToolbarProps) {
             <polygon points="23 7 16 12 23 17 23 7" />
             <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
           </svg>
+          <span className="text-xs">動画</span>
         </Button>
 
         <Button
           size="sm"
           variant="outline"
-          className="px-3"
-          draggable
-          onDragStart={(e) => handleDragStart(e, 'end')}
+          className="px-3 gap-1"
+          onClick={onAddEndNode}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +95,7 @@ export function NodeToolbar({ className, isMobile = false }: NodeToolbarProps) {
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
             <polyline points="22 4 12 14.01 9 11.01" />
           </svg>
+          <span className="text-xs">終了</span>
         </Button>
       </div>
     );

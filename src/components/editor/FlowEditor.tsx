@@ -90,6 +90,25 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
     selectNode(null);
   }, [selectNode]);
 
+  // モバイル用：クリックでノード追加（ビューポート中央付近にランダム配置）
+  const handleAddVideoNodeClick = useCallback(() => {
+    if (!reactFlowInstance.current) return;
+    const position = reactFlowInstance.current.screenToFlowPosition({
+      x: window.innerWidth / 2 + Math.random() * 100 - 50,
+      y: window.innerHeight / 2 + Math.random() * 100 - 50,
+    });
+    addVideoNode(position);
+  }, [addVideoNode]);
+
+  const handleAddEndNodeClick = useCallback(() => {
+    if (!reactFlowInstance.current) return;
+    const position = reactFlowInstance.current.screenToFlowPosition({
+      x: window.innerWidth / 2 + Math.random() * 100 - 50,
+      y: window.innerHeight / 2 + Math.random() * 100 - 50,
+    });
+    addEndNode(position);
+  }, [addEndNode]);
+
   // ドロップでノード追加
   const onDrop = useCallback(
     (event: React.DragEvent) => {
@@ -191,7 +210,11 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
         {/* ツールバー */}
         {!readOnly && (
           <Panel position="top-left">
-            <NodeToolbar isMobile={isMobile} />
+            <NodeToolbar
+              isMobile={isMobile}
+              onAddVideoNode={handleAddVideoNodeClick}
+              onAddEndNode={handleAddEndNodeClick}
+            />
           </Panel>
         )}
 
