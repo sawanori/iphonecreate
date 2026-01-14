@@ -391,7 +391,19 @@ export default function EditorPage() {
             >
               プレビュー
             </Button>
-            <Button size="sm" onClick={handleSave} disabled={isSaving}>
+            <Button
+              size="sm"
+              onClick={handlePreview}
+              disabled={projectId === 'new'}
+              variant="outline"
+              className="sm:hidden"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </Button>
+            <Button size="sm" onClick={handleSave} disabled={isSaving} className="min-w-[50px]">
               {isSaving ? '...' : '保存'}
             </Button>
           </div>
@@ -420,16 +432,6 @@ export default function EditorPage() {
               {isPublished ? '公開中' : '非公開'}
             </Button>
           )}
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePreview}
-            disabled={projectId === 'new'}
-            className="sm:hidden shrink-0"
-          >
-            プレビュー
-          </Button>
 
           {isDirty && (
             <span className="text-xs text-yellow-600 whitespace-nowrap">未保存</span>
