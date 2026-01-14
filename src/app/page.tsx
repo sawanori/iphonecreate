@@ -50,7 +50,7 @@ function FeatureCard({
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
         <div className={cn('absolute inset-0 bg-gradient-to-br opacity-5', colorClasses[color])} />
       </div>
-      <CardContent className="relative p-8">
+      <CardContent className="relative p-8 text-center">
         <div className={cn(
           'mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3',
           colorClasses[color]
