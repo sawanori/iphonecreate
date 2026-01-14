@@ -62,7 +62,6 @@ export async function checkAdminAuth(): Promise<AuthCheckResult> {
  * 認証必須ルート
  */
 export const protectedRoutes = [
-  '/watch',
   '/progress',
   '/editor',
   '/dashboard',
@@ -77,7 +76,7 @@ export const adminRoutes = ['/editor', '/dashboard', '/admin'];
 /**
  * 公開ルート（認証不要）
  */
-export const publicRoutes = ['/login', '/api/auth'];
+export const publicRoutes = ['/', '/login', '/api/auth', '/watch'];
 
 /**
  * パスが保護されたルートかチェック
