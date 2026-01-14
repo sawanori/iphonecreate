@@ -26,8 +26,8 @@ const nodeSchema = z.object({
   id: z.string().uuid(),
   type: z.enum(['video', 'videoNode', 'choice', 'choiceNode', 'end', 'endNode']),
   title: z.string().max(200),
-  positionX: z.number(),
-  positionY: z.number(),
+  positionX: z.number().int(),
+  positionY: z.number().int(),
   videoUrl: z.string().nullable(),
   thumbnailUrl: z.string().nullable(),
 });
@@ -128,6 +128,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const result = updateProjectSchema.safeParse(body);
 
     if (!result.success) {
+      // eslint-disable-next-line no-console -- Debug logging for validation errors
+      console.error('Validation errors:', JSON.stringify(result.error.issues, null, 2));
       return errorResponse(
         ErrorCodes.VALIDATION_ERROR,
         'バリデーションエラー',

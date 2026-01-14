@@ -234,8 +234,8 @@ export default function EditorPage() {
             id: node.id,
             type: node.type,
             title: node.data?.title || '',
-            positionX: node.position.x,
-            positionY: node.position.y,
+            positionX: Math.round(node.position.x),
+            positionY: Math.round(node.position.y),
             videoUrl: node.data?.videoUrl || null,
             thumbnailUrl: node.data?.thumbnailUrl || null,
           })),
@@ -250,7 +250,9 @@ export default function EditorPage() {
       });
 
       if (!updateResponse.ok) {
-        throw new Error('Failed to save project');
+        const errorData = await updateResponse.json().catch(() => null);
+        console.error('Save error:', errorData);
+        throw new Error(errorData?.message || 'Failed to save project');
       }
 
       setIsDirty(false);
