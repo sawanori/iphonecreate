@@ -15,10 +15,31 @@ export async function generateVideoThumbnail(
   seekTime = 1,
   maxWidth = 640
 ): Promise<Blob> {
+  // 早期バリデーション
+  if (!videoUrl || videoUrl.trim() === '') {
+    console.error('[Thumbnail] Empty video URL provided');
+    return Promise.reject(new Error('Empty video URL'));
+  }
+
+  console.log('[Thumbnail] Starting generateVideoThumbnail with URL:', videoUrl);
+
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
+    let isCleanedUp = false;
+
+    // クリーンアップ関数（一度だけ実行）
+    const cleanup = () => {
+      if (isCleanedUp) return;
+      isCleanedUp = true;
+      video.onloadedmetadata = null;
+      video.onseeked = null;
+      video.onerror = null;
+      video.oncanplaythrough = null;
+      video.src = '';
+      video.load(); // srcを空にした後にloadを呼んでリセット
+    };
+
     // CORSが設定されていない場合のフォールバック
-    // まずanonymousで試し、失敗した場合は別の方法を試す
     video.crossOrigin = 'anonymous';
     video.preload = 'auto';
     video.muted = true;
@@ -27,7 +48,7 @@ export async function generateVideoThumbnail(
     // タイムアウト設定（20秒）
     const timeout = setTimeout(() => {
       console.warn('[Thumbnail] Timeout: Video loading took too long');
-      video.src = '';
+      cleanup();
       reject(new Error('Thumbnail generation timeout'));
     }, 20000);
 
@@ -42,6 +63,7 @@ export async function generateVideoThumbnail(
 
         if (width === 0 || height === 0) {
           console.warn('[Thumbnail] Video dimensions are 0, cannot capture');
+          cleanup();
           reject(new Error('Video dimensions are 0'));
           return;
         }
@@ -58,6 +80,7 @@ export async function generateVideoThumbnail(
 
         const ctx = canvas.getContext('2d');
         if (!ctx) {
+          cleanup();
           reject(new Error('Failed to get canvas context'));
           return;
         }
@@ -66,11 +89,10 @@ export async function generateVideoThumbnail(
 
         canvas.toBlob(
           (blob) => {
-            // クリーンアップ
-            video.src = '';
+            cleanup();
 
             if (blob) {
-              console.log('[Thumbnail] Successfully generated thumbnail blob');
+              console.log('[Thumbnail] Successfully generated thumbnail blob, size:', blob.size);
               resolve(blob);
             } else {
               console.warn('[Thumbnail] Failed to generate blob');
@@ -82,7 +104,7 @@ export async function generateVideoThumbnail(
         );
       } catch (error) {
         console.error('[Thumbnail] Canvas error:', error);
-        video.src = '';
+        cleanup();
         reject(error);
       }
     };
@@ -99,15 +121,18 @@ export async function generateVideoThumbnail(
       console.log('[Thumbnail] Video can play through');
     };
 
-    video.onerror = (e) => {
+    video.onerror = () => {
+      // クリーンアップ済みの場合は無視（ループ防止）
+      if (isCleanedUp) return;
+
       clearTimeout(timeout);
-      console.error('[Thumbnail] Video error:', e, video.error);
-      video.src = '';
-      reject(new Error(`Failed to load video: ${video.error?.message || 'Unknown error'}`));
+      const errorMsg = video.error?.message || 'Unknown error';
+      console.error('[Thumbnail] Video error:', errorMsg, 'Code:', video.error?.code);
+      cleanup();
+      reject(new Error(`Failed to load video: ${errorMsg}`));
     };
 
     // 動画読み込み開始
-    console.log('[Thumbnail] Starting to load video:', videoUrl);
     video.src = videoUrl;
     video.load();
   });

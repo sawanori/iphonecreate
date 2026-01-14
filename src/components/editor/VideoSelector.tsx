@@ -73,10 +73,24 @@ export function VideoSelector({
 
   // アップロード完了時
   const handleUploadComplete = async (result: { videoUrl: string; fileKey: string }) => {
+    console.log('[VideoSelector] Upload complete:', result);
+    console.log('[VideoSelector] videoUrl:', result.videoUrl);
+    console.log('[VideoSelector] fileKey:', result.fileKey);
+
     setIsGeneratingThumbnail(true);
     setThumbnailError(null);
 
     let thumbnailUrl: string | undefined;
+
+    // videoUrlが空の場合はサムネイル生成をスキップ
+    if (!result.videoUrl) {
+      console.error('[VideoSelector] videoUrl is empty!');
+      setThumbnailError('動画URLが取得できませんでした。');
+      setIsGeneratingThumbnail(false);
+      onVideoSelect(result.videoUrl);
+      onClose();
+      return;
+    }
 
     // サムネイル生成を試行
     try {
@@ -85,7 +99,7 @@ export function VideoSelector({
         setThumbnailError('サムネイル生成に失敗しました。動画は正常にアップロードされています。');
       }
     } catch (error) {
-      console.warn('Failed to generate thumbnail:', error);
+      console.warn('[VideoSelector] Failed to generate thumbnail:', error);
       setThumbnailError('サムネイル生成に失敗しました。CORS設定を確認してください。');
     }
 
