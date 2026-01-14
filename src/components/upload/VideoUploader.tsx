@@ -43,9 +43,9 @@ export function VideoUploader({
 
   // ファイルバリデーション
   const validateFile = useCallback((file: File): string | null => {
-    // 形式チェック
-    if (file.type !== 'video/mp4') {
-      return 'MP4形式のみアップロード可能です';
+    // 形式チェック（MP4またはMOV）
+    if (file.type !== 'video/mp4' && file.type !== 'video/quicktime') {
+      return 'MP4またはMOV形式のみアップロード可能です';
     }
 
     // サイズチェック（500MB）
@@ -217,7 +217,7 @@ export function VideoUploader({
             <input
               ref={fileInputRef}
               type="file"
-              accept="video/mp4"
+              accept="video/mp4,video/quicktime,.mov"
               onChange={handleFileSelect}
               className="hidden"
               id="video-upload"
@@ -226,7 +226,7 @@ export function VideoUploader({
             <div className="text-4xl mb-4">video_camera</div>
 
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              ここにMP4ファイルをドラッグ&ドロップ
+              ここに動画ファイルをドラッグ&ドロップ
               <br />
               または
             </p>
@@ -239,7 +239,7 @@ export function VideoUploader({
             </Button>
 
             <p className="text-xs text-gray-400 mt-4">
-              最大500MB、MP4形式のみ
+              最大500MB、MP4・MOV形式対応
             </p>
           </div>
         ) : (

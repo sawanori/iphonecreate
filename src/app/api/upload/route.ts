@@ -8,8 +8,8 @@ import { successResponse, errorResponse, ErrorCodes } from '@/lib/utils/index';
 const uploadRequestSchema = z.object({
   filename: z.string().min(1, 'ファイル名は必須です'),
   contentType: z.string().refine(
-    (type) => type === 'video/mp4',
-    { message: 'MP4形式のみアップロード可能です' }
+    (type) => type === 'video/mp4' || type === 'video/quicktime',
+    { message: 'MP4またはMOV形式のみアップロード可能です' }
   ),
   size: z.number()
     .positive('ファイルサイズは正の数である必要があります')
