@@ -90,9 +90,9 @@ export function VideoPreloader({
       video.removeEventListener('canplaythrough', handleCanPlayThrough);
       video.removeEventListener('progress', handleProgress);
       video.removeEventListener('error', handleError);
-      // クリーンアップ時にsrcをクリア
-      video.src = '';
-      video.load();
+      // クリーンアップ時はイベントを外してから中断のみ
+      // src='' + load() はエラーを発生させるので避ける
+      video.pause();
     };
   }, [url, handleCanPlayThrough, handleProgress, handleError]);
 
