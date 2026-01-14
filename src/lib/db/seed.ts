@@ -43,6 +43,36 @@ async function seed() {
   // eslint-disable-next-line no-console -- Seed script logging
   console.log('Created viewer user: viewer@example.com');
 
+  // 本番用管理者ユーザー
+  const prodAdminPassword = await hashPassword('noritaka8');
+  await db
+    .insert(users)
+    .values({
+      email: 'snp.inc.info@gmail.com',
+      name: '管理者',
+      passwordHash: prodAdminPassword,
+      role: 'admin',
+    })
+    .onConflictDoNothing();
+
+  // eslint-disable-next-line no-console -- Seed script logging
+  console.log('Created production admin user: snp.inc.info@gmail.com');
+
+  // 本番用視聴者ユーザー（別メールアドレス）
+  const prodViewerPassword = await hashPassword('noritaka8');
+  await db
+    .insert(users)
+    .values({
+      email: 'snp.inc.info+viewer@gmail.com',
+      name: '視聴者',
+      passwordHash: prodViewerPassword,
+      role: 'viewer',
+    })
+    .onConflictDoNothing();
+
+  // eslint-disable-next-line no-console -- Seed script logging
+  console.log('Created production viewer user: snp.inc.info+viewer@gmail.com');
+
   // eslint-disable-next-line no-console -- Seed script logging
   console.log('Seeding completed!');
 }
