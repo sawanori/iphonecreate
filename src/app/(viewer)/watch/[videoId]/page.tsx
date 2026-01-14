@@ -210,7 +210,9 @@ export default function WatchPage() {
   const [isNextVideoReady, setIsNextVideoReady] = useState(false);
   const [showNextVideo, setShowNextVideo] = useState(false);
   const [isNextVideoPlaying, setIsNextVideoPlaying] = useState(false); // 次の動画を先行再生
+  const [canFadeIn, setCanFadeIn] = useState(false); // フェードイン許可フラグ
   const preplayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const fadeInTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load data from API
   useEffect(() => {
@@ -326,47 +328,58 @@ export default function WatchPage() {
       console.log('[Crossfade] targetNode:', { id: targetNode?.id, videoUrl: targetNode?.videoUrl });
 
       if (targetNode?.videoUrl) {
+        // Clear any existing fade-in timer
+        if (fadeInTimerRef.current) {
+          clearTimeout(fadeInTimerRef.current);
+          fadeInTimerRef.current = null;
+        }
+
         setNextVideoUrl(targetNode.videoUrl);
         setIsNextVideoReady(false);
         setShowNextVideo(false);
-        setIsNextVideoPlaying(false);
+        setCanFadeIn(false);
+        // モバイル: ユーザージェスチャー内で即座に再生開始（ミュート状態で）
+        // これによりモバイルの自動再生制限を回避
+        setIsNextVideoPlaying(true);
 
-        console.log('[Crossfade] nextVideoUrl set to:', targetNode.videoUrl);
+        // 4.5秒後にフェードイン許可（5秒のリードタイムの90%）
+        fadeInTimerRef.current = setTimeout(() => {
+          console.log('[Crossfade] 4.5s timer fired, canFadeIn = true');
+          setCanFadeIn(true);
+        }, 4500);
 
-        // 4秒後（5秒のリードタイムの80%）に次の動画を先行再生開始
-        // ロードに十分な時間を確保しつつ、フェードイン前に1秒再生
-        preplayTimerRef.current = setTimeout(() => {
-          console.log('[Crossfade] 4s timer fired, setting isNextVideoPlaying = true');
-          setIsNextVideoPlaying(true);
-        }, 4000);
+        console.log('[Crossfade] nextVideoUrl set, playing immediately (muted) for mobile compatibility');
       }
     }
 
     handleChoiceSelect(choice);
   }, [handleChoiceSelect, data?.branchEdges, data?.nodes, currentNode?.id, currentVideoUrl]);
 
-  // Cleanup preplay timer on unmount
+  // Cleanup timers on unmount
   useEffect(() => {
     return () => {
       if (preplayTimerRef.current) {
         clearTimeout(preplayTimerRef.current);
       }
+      if (fadeInTimerRef.current) {
+        clearTimeout(fadeInTimerRef.current);
+      }
     };
   }, []);
 
-  // Crossfade effect - triggers crossfade when next video is ready AND playing
+  // Crossfade effect - triggers crossfade when next video is ready AND fade-in is allowed
   useEffect(() => {
-    console.log('[Crossfade] Effect check:', { isNextVideoReady, nextVideoUrl: !!nextVideoUrl, isNextVideoPlaying });
+    console.log('[Crossfade] Effect check:', { isNextVideoReady, nextVideoUrl: !!nextVideoUrl, canFadeIn });
 
-    // フェードイン条件: 動画がready かつ 再生中
-    if (!isNextVideoReady || !nextVideoUrl || !isNextVideoPlaying) {
+    // フェードイン条件: 動画がready かつ フェードイン許可（4.5秒経過）
+    if (!isNextVideoReady || !nextVideoUrl || !canFadeIn) {
       return;
     }
 
     console.log('[Crossfade] All conditions met, starting fade-in');
     // Start fade-in of next video
     setShowNextVideo(true);
-  }, [isNextVideoReady, nextVideoUrl, isNextVideoPlaying]);
+  }, [isNextVideoReady, nextVideoUrl, canFadeIn]);
 
   // Clean up crossfade when main video URL changes to the next video
   useEffect(() => {
@@ -378,10 +391,14 @@ export default function WatchPage() {
 
     console.log('[Crossfade] URLs match, scheduling cleanup');
 
-    // Clear preplay timer
+    // Clear timers
     if (preplayTimerRef.current) {
       clearTimeout(preplayTimerRef.current);
       preplayTimerRef.current = null;
+    }
+    if (fadeInTimerRef.current) {
+      clearTimeout(fadeInTimerRef.current);
+      fadeInTimerRef.current = null;
     }
 
     // Wait a bit for main player to load before removing the overlay
@@ -392,6 +409,7 @@ export default function WatchPage() {
       setShowNextVideo(false);
       setIsNextVideoReady(false);
       setIsNextVideoPlaying(false);
+      setCanFadeIn(false);
     }, 1000);
 
     return () => clearTimeout(cleanupTimer);
