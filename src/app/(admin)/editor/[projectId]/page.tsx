@@ -532,8 +532,22 @@ export default function EditorPage() {
               </Card>
             </div>
           ) : (
-            <div className="text-center text-gray-500 py-8">
-              <p>ノードを選択して設定を編集</p>
+            <div className="text-center text-gray-500 py-8 px-4">
+              <svg className="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+              </svg>
+              <p className="font-medium text-gray-700 mb-2">ノードを選択してください</p>
+              <p className="text-sm text-gray-400">
+                キャンバス上のノードをタップすると、ここで設定を編集できます
+              </p>
+              <div className="mt-6 p-3 bg-gray-50 rounded-lg text-left">
+                <p className="text-xs font-medium text-gray-600 mb-2">使い方:</p>
+                <ul className="text-xs text-gray-500 space-y-1">
+                  <li>• ノードをタップして選択</li>
+                  <li>• ツールバーからノードを追加</li>
+                  <li>• ピンチでズーム操作</li>
+                </ul>
+              </div>
             </div>
           )}
         </aside>

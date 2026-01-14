@@ -163,8 +163,11 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
         nodesDraggable={!readOnly}
         nodesConnectable={!readOnly}
         elementsSelectable={!readOnly}
-        panOnScroll
-        selectionOnDrag
+        panOnScroll={!isMobile}
+        panOnDrag={isMobile}
+        selectionOnDrag={!isMobile}
+        zoomOnPinch
+        zoomOnDoubleClick={false}
       >
         <Background color="#aaa" gap={16} />
         <Controls showInteractive={!readOnly} position={isMobile ? 'bottom-right' : 'bottom-left'} />
