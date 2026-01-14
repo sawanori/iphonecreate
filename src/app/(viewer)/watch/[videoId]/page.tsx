@@ -88,7 +88,7 @@ interface CompletionState {
  * Transform API data to player format
  */
 function transformApiData(apiData: ApiProjectData): PlayerData {
-  const { project, nodes, choices, branchConfigs, edges } = apiData;
+  const { project, nodes, choices, branchConfigs } = apiData;
 
   // Find start node (specified, or first video node, or first node)
   const videoNodes = nodes.filter(
@@ -152,20 +152,19 @@ function transformApiData(apiData: ApiProjectData): PlayerData {
       };
     });
 
-  // Transform edges to BranchEdge format
-  const transformedEdges: BranchEdge[] = edges.map((edge) => {
-    // Find the choice that connects source to target
-    const choice = choices.find(
-      (c) => c.nodeId === edge.sourceNodeId && c.targetNodeId === edge.targetNodeId
-    );
-
-    return {
-      id: edge.id,
-      sourceNodeId: edge.sourceNodeId,
-      targetNodeId: edge.targetNodeId,
-      choiceId: choice?.id || '',
-    };
-  });
+  // Transform choices to BranchEdge format
+  // NOTE: Build branchEdges directly from choices with targetNodeId set.
+  // This ensures choiceId is always correctly populated for video transitions.
+  // Previously we tried to match edges to choices, but that failed when
+  // choice.targetNodeId didn't match the visual edge connection.
+  const transformedEdges: BranchEdge[] = choices
+    .filter((c) => c.targetNodeId) // Only choices with a target set
+    .map((choice) => ({
+      id: choice.id, // Use choice ID as edge ID
+      sourceNodeId: choice.nodeId,
+      targetNodeId: choice.targetNodeId!,
+      choiceId: choice.id,
+    }));
 
   // Title/description helpers
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
