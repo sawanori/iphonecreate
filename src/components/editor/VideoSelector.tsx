@@ -99,14 +99,18 @@ export function VideoSelector({
     // ライブラリに追加
     const title = newVideoTitle.trim() || `動画 ${new Date().toLocaleString('ja-JP')}`;
     try {
+      const libraryData: { title: string; videoUrl: string; thumbnailUrl?: string } = {
+        title,
+        videoUrl: result.videoUrl,
+      };
+      // thumbnailUrlがある場合のみ追加（nullはZodエラーになる）
+      if (thumbnailUrl) {
+        libraryData.thumbnailUrl = thumbnailUrl;
+      }
       await fetch('/api/library', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          videoUrl: result.videoUrl,
-          thumbnailUrl: thumbnailUrl || null,
-        }),
+        body: JSON.stringify(libraryData),
       });
     } catch (error) {
       console.error('Failed to add to library:', error);
