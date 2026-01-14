@@ -227,6 +227,11 @@ export default function EditorPage() {
           timeLimit: (node.data?.timeLimit as number) || 15,
         }));
 
+      // Get project thumbnail from first video node with thumbnail
+      const firstThumbnail = nodes.find(
+        (node) => node.type === 'videoNode' && node.data?.thumbnailUrl
+      )?.data?.thumbnailUrl as string | undefined;
+
       const updateResponse = await fetch(`/api/videos/${projectId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -234,6 +239,7 @@ export default function EditorPage() {
           title: projectTitle,
           aspectRatio: aspectRatio,
           isPublished: isPublished,
+          thumbnailUrl: firstThumbnail || undefined,
           nodes: nodes.map((node) => ({
             id: node.id,
             type: node.type,

@@ -19,6 +19,7 @@ interface ProjectCardProps {
     title: string;
     isPublished: boolean;
     createdAt: Date;
+    thumbnailUrl?: string | null;
   };
   index: number;
   baseUrl: string;
@@ -51,14 +52,24 @@ export function ProjectCard({ project, index, baseUrl }: ProjectCardProps) {
       {/* Mobile Layout */}
       <div className="flex flex-col gap-3 sm:hidden">
         <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              'h-10 w-10 rounded-lg bg-gradient-to-br flex items-center justify-center text-white font-bold shadow-lg shrink-0',
-              gradients[index % gradients.length]
-            )}
-          >
-            {project.title[0].toUpperCase()}
-          </div>
+          {project.thumbnailUrl ? (
+            <div className="h-10 w-16 rounded-lg overflow-hidden shrink-0">
+              <img
+                src={project.thumbnailUrl}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div
+              className={cn(
+                'h-10 w-10 rounded-lg bg-gradient-to-br flex items-center justify-center text-white font-bold shadow-lg shrink-0',
+                gradients[index % gradients.length]
+              )}
+            >
+              {project.title[0].toUpperCase()}
+            </div>
+          )}
           <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-gray-900 truncate">{project.title}</h3>
             <p className="text-xs text-gray-500">
@@ -130,14 +141,24 @@ export function ProjectCard({ project, index, baseUrl }: ProjectCardProps) {
       {/* Desktop Layout */}
       <div className="hidden sm:flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div
-            className={cn(
-              'h-12 w-12 rounded-xl bg-gradient-to-br flex items-center justify-center text-white font-bold text-lg shadow-lg transition-transform group-hover:scale-110',
-              gradients[index % gradients.length]
-            )}
-          >
-            {project.title[0].toUpperCase()}
-          </div>
+          {project.thumbnailUrl ? (
+            <div className="h-12 w-20 rounded-xl overflow-hidden shrink-0 transition-transform group-hover:scale-110">
+              <img
+                src={project.thumbnailUrl}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div
+              className={cn(
+                'h-12 w-12 rounded-xl bg-gradient-to-br flex items-center justify-center text-white font-bold text-lg shadow-lg transition-transform group-hover:scale-110',
+                gradients[index % gradients.length]
+              )}
+            >
+              {project.title[0].toUpperCase()}
+            </div>
+          )}
           <div>
             <h3 className="font-semibold text-gray-900">{project.title}</h3>
             <p className="text-sm text-gray-500">
