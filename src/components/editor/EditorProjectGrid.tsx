@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { EditorProjectCard } from './EditorProjectCard';
 import { Button } from '@/components/ui/button';
@@ -18,11 +18,17 @@ interface EditorProjectGridProps {
   projects: Project[];
 }
 
-export function EditorProjectGrid({ projects }: EditorProjectGridProps) {
+export function EditorProjectGrid({ projects: initialProjects }: EditorProjectGridProps) {
   const [baseUrl, setBaseUrl] = useState('');
+  const [projects, setProjects] = useState(initialProjects);
 
   useEffect(() => {
     setBaseUrl(window.location.origin);
+  }, []);
+
+  // プロジェクト削除時のハンドラー
+  const handleDelete = useCallback((projectId: string) => {
+    setProjects((prev) => prev.filter((p) => p.id !== projectId));
   }, []);
 
   if (projects.length === 0) {
@@ -47,6 +53,7 @@ export function EditorProjectGrid({ projects }: EditorProjectGridProps) {
           key={project.id}
           project={project}
           baseUrl={baseUrl}
+          onDelete={handleDelete}
         />
       ))}
     </div>

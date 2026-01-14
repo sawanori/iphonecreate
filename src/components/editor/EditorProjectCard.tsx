@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { QRCodeSVG } from 'qrcode.react';
+import { Trash2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -11,6 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
+  DialogFooter,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
@@ -23,10 +26,13 @@ interface EditorProjectCardProps {
     thumbnailUrl?: string | null;
   };
   baseUrl: string;
+  onDelete?: (projectId: string) => void;
 }
 
-export function EditorProjectCard({ project, baseUrl }: EditorProjectCardProps) {
+export function EditorProjectCard({ project, baseUrl, onDelete }: EditorProjectCardProps) {
   const [copied, setCopied] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const watchUrl = `${baseUrl}/watch/${project.id}`;
 
   const handleCopyUrl = async () => {
@@ -36,6 +42,25 @@ export function EditorProjectCard({ project, baseUrl }: EditorProjectCardProps) 
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy URL:', err);
+    }
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/videos/${project.id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setIsDeleteDialogOpen(false);
+        onDelete?.(project.id);
+      } else {
+        console.error('Failed to delete project');
+      }
+    } catch (err) {
+      console.error('Failed to delete project:', err);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -125,6 +150,46 @@ export function EditorProjectCard({ project, baseUrl }: EditorProjectCardProps) 
               </Link>
             </Button>
           )}
+
+          {/* 削除ボタン */}
+          <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>プロジェクトを削除</DialogTitle>
+                <DialogDescription>
+                  「{project.title}」を削除しますか？この操作は取り消せません。
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="gap-2 sm:gap-0">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDeleteDialogOpen(false)}
+                  disabled={isDeleting}
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      削除中...
+                    </>
+                  ) : (
+                    '削除する'
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </CardContent>
     </Card>
