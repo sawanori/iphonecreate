@@ -535,7 +535,6 @@ export default function WatchPage() {
               )}>
                 <VideoPlayer
                   url={currentVideoUrl}
-                  hasUserInteracted={choiceHistory.length > 0}
                   playing={!isChoiceVisible && !showNextVideo}
                   onTimeReached={handleChoiceDisplayTime}
                   {...(currentNode?.choiceTimestamp != null && {
@@ -558,7 +557,6 @@ export default function WatchPage() {
                 )}>
                   <VideoPlayer
                     url={nextVideoUrl}
-                    hasUserInteracted={true}
                     playing={isNextVideoPlaying}
                     onReady={() => {
                       console.log('[Crossfade] Next VideoPlayer onReady called');
