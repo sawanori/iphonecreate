@@ -36,8 +36,6 @@ export interface UseVideoPlayerOptions {
   onEnd?: (nodeId: string) => void;
   /** プリロード有効化 */
   enablePreload?: boolean;
-  /** 遷移時間（ミリ秒） */
-  transitionDuration?: number;
   /** 選択確認遅延時間（ミリ秒） - 選択後、この時間待ってから遷移 */
   selectionDelay?: number;
 }
@@ -90,7 +88,6 @@ export function useVideoPlayer({
   onChoice,
   onEnd,
   enablePreload = true,
-  transitionDuration = 100,
   selectionDelay = 2500,
 }: UseVideoPlayerOptions): UseVideoPlayerReturn {
   const [isLoading, setIsLoading] = useState(false);
@@ -198,41 +195,39 @@ export function useVideoPlayer({
 
   /**
    * 遷移を実行する内部関数
+   * プリロード済みの動画に即座に切り替え、ブラックアウトを防止
    */
   const executeTransition = useCallback(
     (targetNode: VideoNode, choice: Choice, isTimeout: boolean) => {
-      // 遷移開始
-      setIsTransitioning(true);
-      setIsLoading(true);
-
       // 選択をストアに記録
       selectChoice(choice.id, isTimeout);
 
-      // 遷移アニメーション後に次のノードへ
+      // 即座にノード切り替え（プリロード済みなので待機不要）
+      setCurrentNode(targetNode);
+      hideChoices();
+      clearSelection();
+      setPendingTargetUrl(null);
+      setIsVideoPreloaded(false);
+      pendingTransitionRef.current = null;
+
+      // 遷移フラグは短時間だけセット（UIフィードバック用）
+      setIsTransitioning(true);
+      setIsLoading(true);
+
+      // 遷移完了コールバック
+      onTransitionComplete?.(currentNodeId, targetNode.id);
+
+      // 遷移時間計測終了（パフォーマンス検証用）
+      const transitionDurationActual =
+        performance.now() - transitionStartTimeRef.current;
+      void transitionDurationActual;
+
+      // 50ms後に状態をクリア（最小限の遅延）
       setTimeout(() => {
-        setCurrentNode(targetNode);
-        hideChoices();
-        clearSelection();
-        setPendingTargetUrl(null);
-        setIsVideoPreloaded(false);
-        pendingTransitionRef.current = null;
-
-        // 遷移完了コールバック
-        onTransitionComplete?.(currentNodeId, targetNode.id);
-
-        // 遷移時間計測終了（パフォーマンス検証用）
-        const transitionDurationActual =
-          performance.now() - transitionStartTimeRef.current;
-        void transitionDurationActual;
-
         setIsLoading(false);
         setIsTransitioning(false);
-
-        // 少し待ってから再生開始
-        setTimeout(() => {
-          setIsPlaying(true);
-        }, 100);
-      }, transitionDuration);
+        setIsPlaying(true);
+      }, 50);
     },
     [
       currentNodeId,
@@ -243,7 +238,6 @@ export function useVideoPlayer({
       hideChoices,
       clearSelection,
       setIsPlaying,
-      transitionDuration,
     ]
   );
 

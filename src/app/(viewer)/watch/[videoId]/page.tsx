@@ -408,7 +408,7 @@ export default function WatchPage() {
               <VideoPlayer
                 url={currentVideoUrl}
                 hasUserInteracted={choiceHistory.length > 0}
-                playing={!isChoiceVisible && !isTransitioning}
+                playing={!isChoiceVisible}
                 onTimeReached={handleChoiceDisplayTime}
                 {...(currentNode?.choiceTimestamp != null && {
                   choiceDisplayTime: currentNode.choiceTimestamp,
