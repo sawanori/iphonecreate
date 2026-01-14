@@ -5,6 +5,7 @@ import { getOverallAnalytics } from '@/lib/services/analytics.service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { ProjectList } from '@/components/dashboard';
 import { cn } from '@/lib/utils';
 
 /**
@@ -298,116 +299,7 @@ export default async function DashboardPage() {
           </div>
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
-          {projects.length === 0 ? (
-            <div className="text-center py-8 sm:py-12">
-              <div className="mx-auto mb-4 h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl bg-gray-100 flex items-center justify-center">
-                <svg className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
-              </div>
-              <p className="text-gray-500 font-medium">プロジェクトがありません</p>
-              <p className="text-gray-400 text-sm mt-1">最初のプロジェクトを作成しましょう</p>
-              <Button
-                asChild
-                className="mt-4 bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white rounded-xl font-semibold shadow-lg transition-all hover:scale-105"
-              >
-                <Link href="/editor/new">プロジェクトを作成</Link>
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-3 sm:space-y-4">
-              {projects.slice(0, 5).map((project, index) => {
-                const gradients = [
-                  'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]',
-                  'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]',
-                  'from-[oklch(0.45_0.15_165)] to-[oklch(0.60_0.13_165)]',
-                  'from-[oklch(0.60_0.13_165)] to-[oklch(0.80_0.12_165)]',
-                  'from-[oklch(0.80_0.12_165)] to-[oklch(0.60_0.13_165)]',
-                ];
-
-                return (
-                  <div
-                    key={project.id}
-                    className="p-3 sm:p-5 bg-gradient-to-r from-gray-50 to-white rounded-xl sm:rounded-2xl hover:shadow-md transition-all group"
-                  >
-                    {/* Mobile Layout */}
-                    <div className="flex flex-col gap-3 sm:hidden">
-                      <div className="flex items-center gap-3">
-                        <div className={cn(
-                          'h-10 w-10 rounded-lg bg-gradient-to-br flex items-center justify-center text-white font-bold shadow-lg shrink-0',
-                          gradients[index % gradients.length]
-                        )}>
-                          {project.title[0].toUpperCase()}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-semibold text-gray-900 truncate">{project.title}</h3>
-                          <p className="text-xs text-gray-500">
-                            {new Date(project.createdAt).toLocaleDateString('ja-JP', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={cn(
-                            'px-2.5 py-1 text-xs font-semibold rounded-lg',
-                            project.isPublished
-                              ? 'bg-[oklch(0.90_0.08_165)] text-[oklch(0.35_0.12_165)]'
-                              : 'bg-gray-100 text-gray-600'
-                          )}
-                        >
-                          {project.isPublished ? '公開中' : '下書き'}
-                        </span>
-                        <Button asChild size="sm" variant="outline" className="rounded-lg text-xs h-8 px-3">
-                          <Link href={`/editor/${project.id}`}>編集</Link>
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Desktop Layout */}
-                    <div className="hidden sm:flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className={cn(
-                          'h-12 w-12 rounded-xl bg-gradient-to-br flex items-center justify-center text-white font-bold text-lg shadow-lg transition-transform group-hover:scale-110',
-                          gradients[index % gradients.length]
-                        )}>
-                          {project.title[0].toUpperCase()}
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">{project.title}</h3>
-                          <p className="text-sm text-gray-500">
-                            {new Date(project.createdAt).toLocaleDateString('ja-JP', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={cn(
-                            'px-3 py-1.5 text-xs font-semibold rounded-xl',
-                            project.isPublished
-                              ? 'bg-[oklch(0.90_0.08_165)] text-[oklch(0.35_0.12_165)]'
-                              : 'bg-gray-100 text-gray-600'
-                          )}
-                        >
-                          {project.isPublished ? '公開中' : '下書き'}
-                        </span>
-                        <Button asChild size="sm" variant="outline" className="rounded-xl border-2 hover:bg-gray-50 transition-all">
-                          <Link href={`/editor/${project.id}`}>編集</Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <ProjectList projects={projects} />
         </CardContent>
       </Card>
     </div>
