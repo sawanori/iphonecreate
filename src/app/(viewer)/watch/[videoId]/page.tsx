@@ -205,15 +205,6 @@ export default function WatchPage() {
     useVideoStore();
   const { setIsPlaying, reset: resetStore } = useVideoStore();
 
-  // Crossfade states for seamless video transitions
-  const [nextVideoUrl, setNextVideoUrl] = useState<string | null>(null);
-  const [isNextVideoReady, setIsNextVideoReady] = useState(false);
-  const [showNextVideo, setShowNextVideo] = useState(false);
-  const [isNextVideoPlaying, setIsNextVideoPlaying] = useState(false); // 次の動画を先行再生
-  const [canFadeIn, setCanFadeIn] = useState(false); // フェードイン許可フラグ
-  const preplayTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const fadeInTimerRef = useRef<NodeJS.Timeout | null>(null);
-
   // Load data from API
   useEffect(() => {
     let isMounted = true;
@@ -301,119 +292,6 @@ export default function WatchPage() {
     onEnd: handleEnd,
     selectionDelay: 5000, // 選択後5秒待ってから遷移
   });
-
-  // Crossfade selection handler - sets up next video for preloading
-  const handleChoiceSelectWithPreload = useCallback((choice: Choice) => {
-    console.log('[Crossfade] handleChoiceSelectWithPreload called', {
-      choiceId: choice.id,
-      currentNodeId: currentNode?.id,
-      currentVideoUrl,
-    });
-
-    // Clear any existing timer
-    if (preplayTimerRef.current) {
-      clearTimeout(preplayTimerRef.current);
-      preplayTimerRef.current = null;
-    }
-
-    // Find target node ID from branch edges
-    const targetNodeId = data?.branchEdges.find(
-      e => e.sourceNodeId === currentNode?.id && e.choiceId === choice.id
-    )?.targetNodeId;
-
-    console.log('[Crossfade] targetNodeId found:', targetNodeId);
-
-    if (targetNodeId) {
-      const targetNode = data?.nodes.find(n => n.id === targetNodeId);
-      console.log('[Crossfade] targetNode:', { id: targetNode?.id, videoUrl: targetNode?.videoUrl });
-
-      if (targetNode?.videoUrl) {
-        // Clear any existing fade-in timer
-        if (fadeInTimerRef.current) {
-          clearTimeout(fadeInTimerRef.current);
-          fadeInTimerRef.current = null;
-        }
-
-        setNextVideoUrl(targetNode.videoUrl);
-        setIsNextVideoReady(false);
-        setShowNextVideo(false);
-        setCanFadeIn(false);
-        // モバイル: ユーザージェスチャー内で即座に再生開始（ミュート状態で）
-        // これによりモバイルの自動再生制限を回避
-        setIsNextVideoPlaying(true);
-
-        // 4.5秒後にフェードイン許可（5秒のリードタイムの90%）
-        fadeInTimerRef.current = setTimeout(() => {
-          console.log('[Crossfade] 4.5s timer fired, canFadeIn = true');
-          setCanFadeIn(true);
-        }, 4500);
-
-        console.log('[Crossfade] nextVideoUrl set, playing immediately (muted) for mobile compatibility');
-      }
-    }
-
-    handleChoiceSelect(choice);
-  }, [handleChoiceSelect, data?.branchEdges, data?.nodes, currentNode?.id, currentVideoUrl]);
-
-  // Cleanup timers on unmount
-  useEffect(() => {
-    return () => {
-      if (preplayTimerRef.current) {
-        clearTimeout(preplayTimerRef.current);
-      }
-      if (fadeInTimerRef.current) {
-        clearTimeout(fadeInTimerRef.current);
-      }
-    };
-  }, []);
-
-  // Crossfade effect - triggers crossfade when next video is ready AND fade-in is allowed
-  useEffect(() => {
-    console.log('[Crossfade] Effect check:', { isNextVideoReady, nextVideoUrl: !!nextVideoUrl, canFadeIn });
-
-    // フェードイン条件: 動画がready かつ フェードイン許可（4.5秒経過）
-    if (!isNextVideoReady || !nextVideoUrl || !canFadeIn) {
-      return;
-    }
-
-    console.log('[Crossfade] All conditions met, starting fade-in');
-    // Start fade-in of next video
-    setShowNextVideo(true);
-  }, [isNextVideoReady, nextVideoUrl, canFadeIn]);
-
-  // Clean up crossfade when main video URL changes to the next video
-  useEffect(() => {
-    console.log('[Crossfade] Cleanup check:', { currentVideoUrl, nextVideoUrl, match: currentVideoUrl === nextVideoUrl });
-
-    if (!nextVideoUrl || currentVideoUrl !== nextVideoUrl) {
-      return;
-    }
-
-    console.log('[Crossfade] URLs match, scheduling cleanup');
-
-    // Clear timers
-    if (preplayTimerRef.current) {
-      clearTimeout(preplayTimerRef.current);
-      preplayTimerRef.current = null;
-    }
-    if (fadeInTimerRef.current) {
-      clearTimeout(fadeInTimerRef.current);
-      fadeInTimerRef.current = null;
-    }
-
-    // Wait a bit for main player to load before removing the overlay
-    // This prevents a flash of black while main player catches up
-    const cleanupTimer = setTimeout(() => {
-      console.log('[Crossfade] Cleanup executing');
-      setNextVideoUrl(null);
-      setShowNextVideo(false);
-      setIsNextVideoReady(false);
-      setIsNextVideoPlaying(false);
-      setCanFadeIn(false);
-    }, 1000);
-
-    return () => clearTimeout(cleanupTimer);
-  }, [currentVideoUrl, nextVideoUrl]);
 
   // Rewatch handler
   const handleRewatch = useCallback(() => {
@@ -518,7 +396,7 @@ export default function WatchPage() {
               isFullscreen && "flex items-center justify-center w-screen h-screen"
             )}
           >
-            {/* Video player with crossfade support */}
+            {/* Video player */}
             <div className={cn(
               "relative w-full",
               data.project.aspectRatio === 'portrait' ? 'aspect-[9/16]' : 'aspect-video',
@@ -528,52 +406,26 @@ export default function WatchPage() {
                   ? 'h-full max-w-full'
                   : ''
             )}>
-              {/* Main VideoPlayer */}
-              <div className={cn(
-                "absolute inset-0 transition-opacity duration-500",
-                showNextVideo ? "opacity-0" : "opacity-100"
-              )}>
-                <VideoPlayer
-                  url={currentVideoUrl}
-                  playing={!isChoiceVisible && !showNextVideo}
-                  onTimeReached={handleChoiceDisplayTime}
-                  {...(currentNode?.choiceTimestamp != null && {
-                    choiceDisplayTime: currentNode.choiceTimestamp,
-                  })}
-                  onEnded={handleVideoEnd}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                  onReady={() => { /* Video ready */ }}
-                  controls={!isChoiceVisible && !isFullscreen}
-                  aspectRatio={data.project.aspectRatio}
-                />
-              </div>
-
-              {/* Next VideoPlayer for crossfade preload */}
-              {nextVideoUrl && (
-                <div className={cn(
-                  "absolute inset-0 transition-opacity duration-500",
-                  showNextVideo ? "opacity-100" : "opacity-0"
-                )}>
-                  <VideoPlayer
-                    url={nextVideoUrl}
-                    playing={isNextVideoPlaying}
-                    onReady={() => {
-                      console.log('[Crossfade] Next VideoPlayer onReady called');
-                      setIsNextVideoReady(true);
-                    }}
-                    controls={false}
-                    aspectRatio={data.project.aspectRatio}
-                    muted={!showNextVideo}
-                  />
-                </div>
-              )}
+              {/* VideoPlayer */}
+              <VideoPlayer
+                url={currentVideoUrl}
+                playing={!isChoiceVisible}
+                onTimeReached={handleChoiceDisplayTime}
+                {...(currentNode?.choiceTimestamp != null && {
+                  choiceDisplayTime: currentNode.choiceTimestamp,
+                })}
+                onEnded={handleVideoEnd}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                controls={!isChoiceVisible && !isFullscreen}
+                aspectRatio={data.project.aspectRatio}
+              />
 
               {/* Choice overlay */}
               <ChoiceOverlay
                 choices={choices}
                 isVisible={isChoiceVisible}
-                onSelect={(choice) => handleChoiceSelectWithPreload(choice)}
+                onSelect={handleChoiceSelect}
                 remainingTime={remainingTime}
                 timeLimit={timeLimit}
               />
