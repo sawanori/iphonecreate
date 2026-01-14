@@ -504,3 +504,82 @@
     display: none !important;
   }
 }
+
+/* ========================================
+   React Flow Mobile Touch Handles
+   モバイルでのノード接続を容易にするスタイル
+   ======================================== */
+
+/* モバイル・タブレット向けハンドル拡大 */
+@media (max-width: 1024px) {
+  /* ハンドルの基本サイズを大きく */
+  .react-flow__handle {
+    width: 24px !important;
+    height: 24px !important;
+    border-width: 3px !important;
+    transition: all 0.2s ease;
+  }
+
+  /* ソースハンドル（出力）の色強調 */
+  .react-flow__handle.react-flow__handle-bottom {
+    background-color: oklch(0.65 0.20 250) !important;
+    box-shadow: 0 0 0 4px oklch(0.65 0.20 250 / 0.3);
+  }
+
+  /* ターゲットハンドル（入力）の色強調 */
+  .react-flow__handle.react-flow__handle-top {
+    background-color: oklch(0.55 0.15 150) !important;
+    box-shadow: 0 0 0 4px oklch(0.55 0.15 150 / 0.3);
+  }
+
+  /* タッチ時のハンドル拡大エフェクト */
+  .react-flow__handle:active {
+    transform: scale(1.5);
+    box-shadow: 0 0 0 8px oklch(0.65 0.20 250 / 0.4);
+  }
+
+  /* 接続中のハンドルハイライト */
+  .react-flow__handle.connecting {
+    animation: handle-pulse 0.8s ease-in-out infinite;
+  }
+
+  /* 接続可能なハンドルのハイライト */
+  .react-flow__handle.connectingto {
+    background-color: oklch(0.70 0.20 145) !important;
+    box-shadow: 0 0 0 8px oklch(0.70 0.20 145 / 0.5);
+    transform: scale(1.3);
+  }
+}
+
+/* 小さいスマホ向けさらに大きく */
+@media (max-width: 480px) {
+  .react-flow__handle {
+    width: 32px !important;
+    height: 32px !important;
+    border-width: 4px !important;
+  }
+}
+
+/* ハンドルのパルスアニメーション */
+@keyframes handle-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px oklch(0.65 0.20 250 / 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 12px oklch(0.65 0.20 250 / 0.2);
+    transform: scale(1.2);
+  }
+}
+
+/* エッジ（接続線）をタッチしやすく */
+@media (max-width: 1024px) {
+  .react-flow__edge-path {
+    stroke-width: 4px;
+  }
+
+  .react-flow__edge:hover .react-flow__edge-path,
+  .react-flow__edge.selected .react-flow__edge-path {
+    stroke-width: 6px;
+  }
+}
