@@ -12,7 +12,7 @@ export default async function LoginPage() {
   // 既にログイン済みの場合はリダイレクト
   const session = await auth();
   if (session) {
-    redirect('/');
+    redirect('/dashboard');
   }
 
   return (

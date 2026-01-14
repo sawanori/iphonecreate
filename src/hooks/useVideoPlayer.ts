@@ -251,6 +251,8 @@ export function useVideoPlayer({
    * 遅延遷移を試行する
    * selectionDelay経過 かつ プリロード完了 の両方を満たしたら遷移
    */
+  const attemptDelayedTransitionRef = useRef<() => void>(() => {});
+
   const attemptDelayedTransition = useCallback(() => {
     const pending = pendingTransitionRef.current;
     if (!pending) return;
@@ -268,12 +270,17 @@ export function useVideoPlayer({
       executeTransition(pending.targetNode, pending.choice, pending.isTimeout);
     } else if (elapsed < selectionDelay + 5000) {
       // まだ待機中（最大5秒追加で待つ）
-      requestAnimationFrame(attemptDelayedTransition);
+      requestAnimationFrame(() => attemptDelayedTransitionRef.current());
     } else {
       // タイムアウト - 強制遷移
       executeTransition(pending.targetNode, pending.choice, pending.isTimeout);
     }
   }, [selectionDelay, isVideoPreloaded, executeTransition, setPreloadProgress]);
+
+  // refを最新のコールバックで更新（effect内でのみ更新可能）
+  useEffect(() => {
+    attemptDelayedTransitionRef.current = attemptDelayedTransition;
+  }, [attemptDelayedTransition]);
 
   // 選択処理
   const handleChoiceSelect = useCallback(

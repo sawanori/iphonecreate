@@ -67,14 +67,18 @@ export function VideoPreloader({
     const video = videoRef.current;
     if (!url || !video) return;
 
-    // 状態リセット
+    // 状態リセット（refのみ同期的に更新）
     loadedRef.current = false;
-    setHasLoaded(false);
 
     // イベントリスナー設定
     video.addEventListener('canplaythrough', handleCanPlayThrough);
     video.addEventListener('progress', handleProgress);
     video.addEventListener('error', handleError);
+
+    // 状態リセット（非同期で実行）
+    const resetTimer = requestAnimationFrame(() => {
+      setHasLoaded(false);
+    });
 
     // プリロード開始
     video.src = url;
@@ -82,6 +86,7 @@ export function VideoPreloader({
     video.load();
 
     return () => {
+      cancelAnimationFrame(resetTimer);
       video.removeEventListener('canplaythrough', handleCanPlayThrough);
       video.removeEventListener('progress', handleProgress);
       video.removeEventListener('error', handleError);

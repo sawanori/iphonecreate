@@ -108,7 +108,11 @@ export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    // マウント完了フラグを設定（SSRとクライアントの不一致を解消）
+    const timer = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   return (
@@ -121,12 +125,12 @@ export default function LandingPage() {
             <span className="text-xl font-bold">InteractiveFlow</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/login">
+            <Link href="/login?callbackUrl=/dashboard">
               <Button variant="ghost" className="text-gray-300 hover:text-white">
                 ログイン
               </Button>
             </Link>
-            <Link href="/login">
+            <Link href="/login?callbackUrl=/dashboard">
               <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
                 無料で始める
               </Button>
@@ -187,7 +191,7 @@ export default function LandingPage() {
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               )}
             >
-              <Link href="/login">
+              <Link href="/login?callbackUrl=/dashboard">
                 <Button
                   size="lg"
                   className="h-14 px-8 text-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg shadow-blue-500/30 transition-all hover:shadow-xl hover:shadow-blue-500/40"
@@ -400,7 +404,7 @@ export default function LandingPage() {
           <p className="mx-auto mb-10 max-w-xl text-gray-400 text-lg">
             無料プランで今すぐスタート。クレジットカードは不要です。
           </p>
-          <Link href="/login">
+          <Link href="/login?callbackUrl=/dashboard">
             <Button
               size="lg"
               className="h-14 px-10 text-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg shadow-blue-500/30"
