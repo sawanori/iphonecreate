@@ -312,6 +312,15 @@ export default function EditorPage() {
     }
   };
 
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+
+  // Auto-open side panel when node is selected on mobile
+  useEffect(() => {
+    if (selectedNodeId) {
+      setIsSidePanelOpen(true);
+    }
+  }, [selectedNodeId]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -328,12 +337,13 @@ export default function EditorPage() {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => router.push('/dashboard')}>
+      {/* Header - Mobile */}
+      <header className="bg-white dark:bg-gray-800 border-b">
+        {/* Top row */}
+        <div className="px-3 py-2 flex items-center justify-between gap-2">
+          <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard')} className="shrink-0">
             <svg
-              className="w-4 h-4 mr-2"
+              className="w-4 h-4 sm:mr-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -346,16 +356,36 @@ export default function EditorPage() {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            戻る
+            <span className="hidden sm:inline">戻る</span>
           </Button>
+
           <Input
             value={projectTitle}
             onChange={(e) => setProjectTitle(e.target.value)}
-            className="w-64"
+            className="flex-1 min-w-0 max-w-xs"
             aria-label="Project title"
           />
+
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePreview}
+              disabled={projectId === 'new'}
+              className="hidden sm:flex"
+            >
+              プレビュー
+            </Button>
+            <Button size="sm" onClick={handleSave} disabled={isSaving}>
+              {isSaving ? '...' : '保存'}
+            </Button>
+          </div>
+        </div>
+
+        {/* Bottom row - mobile options */}
+        <div className="px-3 py-2 border-t flex items-center gap-2 overflow-x-auto">
           <Select value={aspectRatio} onValueChange={(v) => setAspectRatio(v as 'landscape' | 'portrait')}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-28 sm:w-32 shrink-0">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -363,34 +393,70 @@ export default function EditorPage() {
               <SelectItem value="portrait">9:16 縦長</SelectItem>
             </SelectContent>
           </Select>
-          {isDirty && (
-            <span className="text-sm text-yellow-600">未保存の変更があります</span>
-          )}
-        </div>
 
-        <div className="flex items-center gap-2">
           <Button
             variant="outline"
+            size="sm"
             onClick={handlePreview}
             disabled={projectId === 'new'}
+            className="sm:hidden shrink-0"
           >
             プレビュー
           </Button>
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? '保存中...' : '保存'}
+
+          {isDirty && (
+            <span className="text-xs text-yellow-600 whitespace-nowrap">未保存</span>
+          )}
+
+          {/* Mobile panel toggle */}
+          <Button
+            variant={isSidePanelOpen ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
+            className="ml-auto shrink-0 lg:hidden"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            設定
           </Button>
         </div>
       </header>
 
       {/* Main area */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Editor */}
         <div className="flex-1">
           <FlowEditor />
         </div>
 
+        {/* Mobile overlay */}
+        {isSidePanelOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsSidePanelOpen(false)}
+          />
+        )}
+
         {/* Side panel */}
-        <aside className="w-80 bg-white dark:bg-gray-800 border-l p-4 overflow-y-auto">
+        <aside
+          className={`
+            fixed lg:relative inset-y-0 right-0 z-50
+            w-[85vw] sm:w-80 bg-white dark:bg-gray-800 border-l p-4 overflow-y-auto
+            transform transition-transform duration-300 ease-out
+            ${isSidePanelOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+          `}
+        >
+          {/* Mobile close button */}
+          <div className="lg:hidden flex justify-between items-center mb-4">
+            <h2 className="font-semibold">ノード設定</h2>
+            <Button variant="ghost" size="sm" onClick={() => setIsSidePanelOpen(false)}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Button>
+          </div>
+
           {selectedNode ? (
             <div className="space-y-4">
               <Card>
@@ -434,7 +500,7 @@ export default function EditorPage() {
                               {selectedNode.data?.videoUrl ? '動画を変更' : '動画を選択'}
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-2xl">
+                          <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                               <DialogTitle>動画を選択</DialogTitle>
                             </DialogHeader>

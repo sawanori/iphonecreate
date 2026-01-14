@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import {
   ReactFlow,
   Background,
@@ -48,6 +48,15 @@ export interface FlowEditorProps {
  */
 export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const {
     nodes,
@@ -158,31 +167,33 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
         selectionOnDrag
       >
         <Background color="#aaa" gap={16} />
-        <Controls showInteractive={!readOnly} />
-        <MiniMap
-          nodeColor={(node) => {
-            switch (node.type) {
-              case 'videoNode':
-                return '#3b82f6';
-              case 'endNode':
-                return '#10b981';
-              case 'choiceNode':
-                return '#8b5cf6';
-              default:
-                return '#6b7280';
-            }
-          }}
-        />
+        <Controls showInteractive={!readOnly} position={isMobile ? 'bottom-right' : 'bottom-left'} />
+        {!isMobile && (
+          <MiniMap
+            nodeColor={(node) => {
+              switch (node.type) {
+                case 'videoNode':
+                  return '#3b82f6';
+                case 'endNode':
+                  return '#10b981';
+                case 'choiceNode':
+                  return '#8b5cf6';
+                default:
+                  return '#6b7280';
+              }
+            }}
+          />
+        )}
 
         {/* ツールバー */}
         {!readOnly && (
           <Panel position="top-left">
-            <NodeToolbar />
+            <NodeToolbar isMobile={isMobile} />
           </Panel>
         )}
 
         {/* 変更インジケーター */}
-        {isDirty && (
+        {isDirty && !isMobile && (
           <Panel
             position="top-right"
             className="bg-yellow-100 dark:bg-yellow-900 p-2 rounded-lg"

@@ -22,11 +22,14 @@ export default async function ProjectsPage() {
   const projects = await getProjects(session?.user?.id);
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">プロジェクト</h1>
-        <Button asChild>
-          <Link href="/editor/new">新規プロジェクト</Link>
+    <div className="p-4 sm:p-8">
+      <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold">プロジェクト</h1>
+        <Button asChild size="sm" className="sm:size-default">
+          <Link href="/editor/new">
+            <span className="hidden sm:inline">新規プロジェクト</span>
+            <span className="sm:hidden">+ 新規</span>
+          </Link>
         </Button>
       </div>
 

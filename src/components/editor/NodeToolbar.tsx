@@ -17,13 +17,15 @@ import { cn } from '@/lib/utils';
 export interface NodeToolbarProps {
   /** 追加のクラス名 */
   className?: string;
+  /** モバイル表示かどうか */
+  isMobile?: boolean;
 }
 
 /**
  * ノード追加ツールバー
  * ドラッグ&ドロップでノードをキャンバスに追加できる
  */
-export function NodeToolbar({ className }: NodeToolbarProps) {
+export function NodeToolbar({ className, isMobile = false }: NodeToolbarProps) {
   /**
    * ドラッグ開始時にノードタイプを設定
    */
@@ -35,6 +37,67 @@ export function NodeToolbar({ className }: NodeToolbarProps) {
     event.dataTransfer.effectAllowed = 'move';
   };
 
+  // Mobile: compact horizontal layout
+  if (isMobile) {
+    return (
+      <div
+        className={cn(
+          'bg-white dark:bg-gray-800 p-2 rounded-lg shadow-lg',
+          'flex flex-row gap-2',
+          className
+        )}
+      >
+        <Button
+          size="sm"
+          variant="outline"
+          className="px-3"
+          draggable
+          onDragStart={(e) => handleDragStart(e, 'video')}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polygon points="23 7 16 12 23 17 23 7" />
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+          </svg>
+        </Button>
+
+        <Button
+          size="sm"
+          variant="outline"
+          className="px-3"
+          draggable
+          onDragStart={(e) => handleDragStart(e, 'end')}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-green-600"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        </Button>
+      </div>
+    );
+  }
+
+  // Desktop: full layout
   return (
     <div
       className={cn(
