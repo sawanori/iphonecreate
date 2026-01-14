@@ -35,8 +35,8 @@ export async function generateVideoThumbnail(
       video.onseeked = null;
       video.onerror = null;
       video.oncanplaythrough = null;
-      video.src = '';
-      video.load(); // srcを空にした後にloadを呼んでリセット
+      // src='' + load() はエラーを発生させるので、pause()のみ
+      video.pause();
     };
 
     // CORSが設定されていない場合のフォールバック

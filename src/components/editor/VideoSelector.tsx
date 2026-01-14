@@ -75,9 +75,8 @@ export function VideoSelector({
   const handleUploadComplete = async (result: { videoUrl: string; fileKey: string }) => {
     console.log('[VideoSelector] Upload complete:', result);
 
-    // サムネイル生成は一時的に無効化
-    // TODO: R2のCORS設定後に再有効化
-    const ENABLE_THUMBNAIL_GENERATION = false;
+    // サムネイル生成を有効化
+    const ENABLE_THUMBNAIL_GENERATION = true;
 
     let thumbnailUrl: string | undefined;
 
