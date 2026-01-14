@@ -185,20 +185,6 @@ export default function LandingPage() {
       <section className="relative pt-40 pb-24">
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
-            {/* Badge */}
-            <div
-              className={cn(
-                'mb-8 inline-flex items-center gap-3 rounded-full border-2 border-[oklch(0.75_0.18_25)]/20 bg-white/80 backdrop-blur-sm px-5 py-2.5 text-sm transition-all duration-700 shadow-lg',
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-              )}
-            >
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[oklch(0.82_0.14_165)] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-[oklch(0.82_0.14_165)]"></span>
-              </span>
-              <span className="text-gray-700 font-medium">次世代トレーニングプラットフォーム</span>
-            </div>
-
             {/* Heading */}
             <h1
               className={cn(
