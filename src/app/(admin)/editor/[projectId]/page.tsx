@@ -1,0 +1,477 @@
+'use client';
+
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { FlowEditor } from '@/components/editor';
+import { ChoiceEditor, type EditorChoice } from '@/components/editor/ChoiceEditor';
+import { VideoSelector } from '@/components/editor/VideoSelector';
+import { useEditorStore } from '@/stores/editorStore';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+/**
+ * Video node type from API
+ */
+interface ApiVideoNode {
+  id: string;
+  type: string;
+  title: string;
+  videoUrl: string | null;
+  thumbnailUrl: string | null;
+  positionX: number;
+  positionY: number;
+}
+
+/**
+ * Choice type from API
+ */
+interface ApiChoice {
+  id: string;
+  nodeId: string;
+  label: string;
+  targetNodeId: string | null;
+}
+
+/**
+ * Branch config type from API
+ */
+interface ApiBranchConfig {
+  nodeId: string;
+  timeLimit: number | null;
+}
+
+/**
+ * Edge type from API
+ */
+interface ApiEdge {
+  id: string;
+  sourceNodeId: string;
+  targetNodeId: string;
+}
+
+/**
+ * Project data type from API
+ */
+interface ProjectData {
+  project: {
+    id: string;
+    title: string;
+    aspectRatio?: 'landscape' | 'portrait';
+  };
+  nodes: ApiVideoNode[];
+  choices: ApiChoice[];
+  branchConfigs: ApiBranchConfig[];
+  edges: ApiEdge[];
+}
+
+/**
+ * Editor page component
+ */
+export default function EditorPage() {
+  const params = useParams();
+  const router = useRouter();
+  const projectId = params.projectId as string;
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [projectTitle, setProjectTitle] = useState('');
+  const [aspectRatio, setAspectRatio] = useState<'landscape' | 'portrait'>('landscape');
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+
+  const { isDirty, initializeEditor, selectedNodeId, nodes, edges, updateNode, setIsDirty } =
+    useEditorStore();
+
+  // Get selected node
+  const selectedNode = useMemo(() => {
+    return nodes.find((n) => n.id === selectedNodeId);
+  }, [nodes, selectedNodeId]);
+
+  // Get available target nodes for choices
+  const availableNodes = useMemo(() => {
+    return nodes.map((n) => ({
+      id: n.id,
+      title: (n.data?.title as string) || 'Untitled',
+      type: n.type || 'videoNode',
+    }));
+  }, [nodes]);
+
+  /**
+   * Load project data
+   */
+  const loadProject = useCallback(async () => {
+    if (projectId === 'new') {
+      initializeEditor('new', [], []);
+      setProjectTitle('New Project');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/videos/${projectId}`);
+      if (!response.ok) {
+        throw new Error('Failed to load project');
+      }
+
+      const { data } = (await response.json()) as { data: ProjectData };
+
+      const flowNodes = data.nodes.map((node: ApiVideoNode) => ({
+        id: node.id,
+        type:
+          node.type === 'video'
+            ? 'videoNode'
+            : node.type === 'end'
+              ? 'endNode'
+              : node.type === 'videoNode'
+                ? 'videoNode'
+                : node.type === 'endNode'
+                  ? 'endNode'
+                  : 'videoNode',
+        position: { x: node.positionX, y: node.positionY },
+        data: {
+          title: node.title,
+          videoUrl: node.videoUrl,
+          thumbnailUrl: node.thumbnailUrl,
+          choices: data.choices
+            .filter((c: ApiChoice) => c.nodeId === node.id)
+            .map((c: ApiChoice) => ({
+              id: c.id,
+              label: c.label,
+              targetNodeId: c.targetNodeId,
+            })),
+          timeLimit:
+            data.branchConfigs.find(
+              (b: ApiBranchConfig) => b.nodeId === node.id
+            )?.timeLimit ?? 15,
+        },
+      }));
+
+      const flowEdges = data.edges.map((edge: ApiEdge) => ({
+        id: edge.id,
+        source: edge.sourceNodeId,
+        target: edge.targetNodeId,
+        type: 'smoothstep',
+      }));
+
+      initializeEditor(projectId, flowNodes, flowEdges);
+      setProjectTitle(data.project.title);
+      setAspectRatio(data.project.aspectRatio || 'landscape');
+    } catch {
+      alert('プロジェクトの読み込みに失敗しました');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [projectId, initializeEditor]);
+
+  useEffect(() => {
+    loadProject();
+  }, [loadProject]);
+
+  /**
+   * Handle save
+   */
+  const handleSave = async () => {
+    setIsSaving(true);
+
+    try {
+      if (projectId === 'new') {
+        const createResponse = await fetch('/api/videos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: projectTitle }),
+        });
+
+        if (!createResponse.ok) {
+          throw new Error('Failed to create project');
+        }
+
+        const { data } = await createResponse.json();
+        router.push(`/editor/${data.project.id}`);
+        return;
+      }
+
+      // Collect all choices from nodes
+      const allChoices = nodes.flatMap((node) => {
+        const nodeChoices = (node.data?.choices as EditorChoice[]) || [];
+        return nodeChoices.map((choice) => ({
+          id: choice.id,
+          nodeId: node.id,
+          label: choice.label,
+          targetNodeId: choice.targetNodeId,
+        }));
+      });
+
+      // Collect branch configs (time limits) from nodes
+      const branchConfigs = nodes
+        .filter((node) => node.type === 'videoNode')
+        .map((node) => ({
+          nodeId: node.id,
+          timeLimit: (node.data?.timeLimit as number) || 15,
+        }));
+
+      const updateResponse = await fetch(`/api/videos/${projectId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: projectTitle,
+          aspectRatio: aspectRatio,
+          nodes: nodes.map((node) => ({
+            id: node.id,
+            type: node.type,
+            title: node.data?.title || '',
+            positionX: node.position.x,
+            positionY: node.position.y,
+            videoUrl: node.data?.videoUrl || null,
+            thumbnailUrl: node.data?.thumbnailUrl || null,
+          })),
+          edges: edges.map((edge) => ({
+            id: edge.id,
+            sourceNodeId: edge.source,
+            targetNodeId: edge.target,
+          })),
+          choices: allChoices,
+          branchConfigs: branchConfigs,
+        }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error('Failed to save project');
+      }
+
+      setIsDirty(false);
+      alert('保存しました');
+    } catch {
+      alert('プロジェクトの保存に失敗しました');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /**
+   * Handle preview
+   */
+  const handlePreview = () => {
+    if (projectId !== 'new') {
+      window.open(`/watch/${projectId}`, '_blank');
+    }
+  };
+
+  /**
+   * Handle video selection (from upload or library)
+   */
+  const handleVideoSelect = (videoUrl: string, thumbnailUrl?: string) => {
+    setUploadDialogOpen(false);
+    if (selectedNodeId) {
+      const updateData: { videoUrl: string; thumbnailUrl?: string } = { videoUrl };
+      if (thumbnailUrl) {
+        updateData.thumbnailUrl = thumbnailUrl;
+      }
+      updateNode(selectedNodeId, updateData);
+    }
+  };
+
+  /**
+   * Handle node title change
+   */
+  const handleNodeTitleChange = (title: string) => {
+    if (selectedNodeId) {
+      updateNode(selectedNodeId, { title });
+    }
+  };
+
+  /**
+   * Handle choices change
+   */
+  const handleChoicesChange = (choices: EditorChoice[]) => {
+    if (selectedNodeId) {
+      updateNode(selectedNodeId, { choices });
+    }
+  };
+
+  /**
+   * Handle time limit change
+   */
+  const handleTimeLimitChange = (timeLimit: number) => {
+    if (selectedNodeId) {
+      updateNode(selectedNodeId, { timeLimit });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"
+          role="status"
+          aria-label="読み込み中"
+        />
+      </div>
+    );
+  }
+
+  const isVideoNode = selectedNode?.type === 'videoNode';
+
+  return (
+    <div className="h-screen flex flex-col">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 border-b px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" onClick={() => router.push('/dashboard')}>
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            戻る
+          </Button>
+          <Input
+            value={projectTitle}
+            onChange={(e) => setProjectTitle(e.target.value)}
+            className="w-64"
+            aria-label="Project title"
+          />
+          <Select value={aspectRatio} onValueChange={(v) => setAspectRatio(v as 'landscape' | 'portrait')}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="landscape">16:9 横長</SelectItem>
+              <SelectItem value="portrait">9:16 縦長</SelectItem>
+            </SelectContent>
+          </Select>
+          {isDirty && (
+            <span className="text-sm text-yellow-600">未保存の変更があります</span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={handlePreview}
+            disabled={projectId === 'new'}
+          >
+            プレビュー
+          </Button>
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? '保存中...' : '保存'}
+          </Button>
+        </div>
+      </header>
+
+      {/* Main area */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Editor */}
+        <div className="flex-1">
+          <FlowEditor />
+        </div>
+
+        {/* Side panel */}
+        <aside className="w-80 bg-white dark:bg-gray-800 border-l p-4 overflow-y-auto">
+          {selectedNode ? (
+            <div className="space-y-4">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">
+                    {isVideoNode ? '動画ノード設定' : '終了ノード設定'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Node Title */}
+                  <div>
+                    <Label htmlFor="node-title" className="text-sm font-medium">
+                      タイトル
+                    </Label>
+                    <Input
+                      id="node-title"
+                      value={(selectedNode.data?.title as string) || ''}
+                      onChange={(e) => handleNodeTitleChange(e.target.value)}
+                      placeholder="ノードのタイトル"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  {/* Video Upload (only for video nodes) */}
+                  {isVideoNode && (
+                    <>
+                      <div>
+                        <Label className="text-sm font-medium">動画</Label>
+                        {selectedNode.data?.videoUrl ? (
+                          <div className="mt-1 p-2 bg-green-50 dark:bg-green-900/20 rounded text-sm">
+                            <p className="text-green-700 dark:text-green-300 truncate">
+                              アップロード済み
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="mt-1 text-sm text-gray-500">未アップロード</p>
+                        )}
+                        <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" className="w-full mt-2">
+                              {selectedNode.data?.videoUrl ? '動画を変更' : '動画を選択'}
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl">
+                            <DialogHeader>
+                              <DialogTitle>動画を選択</DialogTitle>
+                            </DialogHeader>
+                            <VideoSelector
+                              projectId={projectId}
+                              currentVideoUrl={selectedNode.data?.videoUrl as string | undefined}
+                              onVideoSelect={handleVideoSelect}
+                              onClose={() => setUploadDialogOpen(false)}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+
+                      {/* Divider */}
+                      <div className="border-t pt-4">
+                        <h3 className="text-sm font-medium mb-3">分岐設定</h3>
+                        <ChoiceEditor
+                          choices={(selectedNode.data?.choices as EditorChoice[]) || []}
+                          timeLimit={(selectedNode.data?.timeLimit as number) || 15}
+                          availableNodes={availableNodes}
+                          currentNodeId={selectedNodeId!}
+                          onChoicesChange={handleChoicesChange}
+                          onTimeLimitChange={handleTimeLimitChange}
+                        />
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <div className="text-center text-gray-500 py-8">
+              <p>ノードを選択して設定を編集</p>
+            </div>
+          )}
+        </aside>
+      </div>
+    </div>
+  );
+}
