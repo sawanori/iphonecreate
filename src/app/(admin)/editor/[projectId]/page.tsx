@@ -96,7 +96,7 @@ export default function EditorPage() {
   const [isPublished, setIsPublished] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
-  const { isDirty, initializeEditor, selectedNodeId, nodes, edges, updateNode, setIsDirty } =
+  const { isDirty, initializeEditor, selectedNodeId, nodes, edges, updateNode, setIsDirty, removeNode } =
     useEditorStore();
 
   // Get selected node
@@ -559,6 +559,25 @@ export default function EditorPage() {
                   )}
                 </CardContent>
               </Card>
+
+              {/* ノード削除ボタン */}
+              <div className="mt-4 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                  onClick={() => {
+                    if (window.confirm('このノードを削除しますか？')) {
+                      removeNode(selectedNodeId!);
+                    }
+                  }}
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  ノードを削除
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="text-center text-gray-500 py-8 px-4">
