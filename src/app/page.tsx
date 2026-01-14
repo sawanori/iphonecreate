@@ -229,7 +229,7 @@ export default function LandingPage() {
                     </div>
                   </div>
                   {/* Choice buttons */}
-                  <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-2 sm:gap-4 w-[calc(100%-2rem)] sm:w-auto">
+                  <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-row gap-2 sm:gap-4">
                     <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.60_0.13_165)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.45_0.15_165)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
                       選択肢 A
                     </div>
