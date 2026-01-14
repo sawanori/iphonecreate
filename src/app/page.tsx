@@ -215,7 +215,7 @@ export default function LandingPage() {
             {/* CTA Buttons */}
             <div
               className={cn(
-                'flex flex-col items-center justify-center gap-4 transition-all duration-700 delay-300 sm:flex-row',
+                'flex flex-row flex-wrap items-center justify-center gap-4 transition-all duration-700 delay-300',
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               )}
             >
