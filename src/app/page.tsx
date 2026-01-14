@@ -202,15 +202,15 @@ export default function LandingPage() {
             {/* Heading */}
             <h1
               className={cn(
-                'mb-8 text-5xl font-extrabold leading-tight tracking-tight transition-all duration-700 delay-100 sm:text-6xl lg:text-7xl',
+                'mb-8 text-[clamp(1.75rem,6vw,4.5rem)] font-extrabold leading-tight tracking-tight transition-all duration-700 delay-100',
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               )}
             >
-              <span className="text-gray-900">
+              <span className="text-gray-900 whitespace-nowrap">
                 インタラクティブ動画で
               </span>
               <br />
-              <span className="gradient-text-sunset inline-block mt-2">
+              <span className="gradient-text-sunset inline-block mt-2 whitespace-nowrap">
                 学習体験を変革する
               </span>
             </h1>
