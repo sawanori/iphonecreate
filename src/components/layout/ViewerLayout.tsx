@@ -60,7 +60,7 @@ export function ViewerLayout({ title, children, className }: ViewerLayoutProps) 
           <div className="flex items-center justify-center gap-2">
             <div className="h-5 w-5 rounded-md bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)]" />
             <p className="text-white/50 text-xs sm:text-sm font-medium">
-              Interactive Video Platform
+              AかBか
             </p>
           </div>
         </div>

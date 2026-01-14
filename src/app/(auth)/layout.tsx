@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Authentication | Interactive Video Platform',
+  title: '認証 | AかBか',
 };
 
 export default function AuthLayout({
@@ -23,7 +23,7 @@ export default function AuthLayout({
       <div className="absolute top-6 left-6 flex items-center gap-3 z-10">
         <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
         <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
-          InteractiveFlow
+          AかBか
         </span>
       </div>
 

@@ -161,7 +161,7 @@ export default function LandingPage() {
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
                 <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
-                  InteractiveFlow
+                  AかBか
                 </span>
               </div>
               <Link href="/login?callbackUrl=/dashboard">
@@ -464,10 +464,10 @@ export default function LandingPage() {
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
-              <span className="text-xl font-bold gradient-text">InteractiveFlow</span>
+              <span className="text-xl font-bold gradient-text">AかBか</span>
             </div>
             <p className="text-gray-500 text-sm">
-              © 2026 InteractiveFlow. All rights reserved.
+              © 2026 AかBか. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-gray-500 hover:text-[oklch(0.75_0.18_25)] transition-colors font-medium">

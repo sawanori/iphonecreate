@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Watch | Interactive Video Platform',
-  description: 'Watch interactive videos',
+  title: '視聴 | AかBか',
+  description: 'インタラクティブ動画を視聴',
 };
 
 export default function ViewerRootLayout({

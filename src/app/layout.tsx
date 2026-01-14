@@ -24,8 +24,8 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "InteractiveFlow | Interactive Video Platform",
-  description: "Create engaging interactive video experiences",
+  title: "AかBか | インタラクティブ動画プラットフォーム",
+  description: "インタラクティブ動画で学習体験を変革する",
 };
 
 export default function RootLayout({

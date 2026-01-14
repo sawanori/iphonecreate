@@ -4,8 +4,8 @@ import { auth } from '@/lib/auth';
 import { LoginForm } from '@/components/auth';
 
 export const metadata: Metadata = {
-  title: 'Login | Interactive Video Platform',
-  description: 'Sign in to your account',
+  title: 'ログイン | AかBか',
+  description: 'アカウントにログイン',
 };
 
 export default async function LoginPage() {

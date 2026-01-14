@@ -116,7 +116,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-md" />
             <span className="text-lg font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
-              InteractiveFlow
+              AかBか
             </span>
           </Link>
           <button
@@ -161,7 +161,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <Link href="/dashboard" className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-lg" />
             <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
-              InteractiveFlow
+              AかBか
             </span>
           </Link>
         </div>
