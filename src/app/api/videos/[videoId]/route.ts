@@ -82,19 +82,26 @@ type RouteContext = {
 /**
  * GET /api/videos/[videoId]
  * プロジェクト詳細を取得（ノード、選択肢、エッジを含む）
+ * 公開済みプロジェクトは認証不要、非公開は認証必須
  */
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse(ErrorCodes.UNAUTHORIZED, '認証が必要です', 401);
-    }
-
     const { videoId } = await context.params;
     const data = await getProjectWithData(videoId);
 
     if (!data) {
       return errorResponse(ErrorCodes.NOT_FOUND, 'プロジェクトが見つかりません', 404);
+    }
+
+    // 公開済みプロジェクトは誰でもアクセス可能
+    if (data.project.isPublished) {
+      return successResponse(data);
+    }
+
+    // 非公開プロジェクトは認証必須
+    const session = await auth();
+    if (!session?.user) {
+      return errorResponse(ErrorCodes.UNAUTHORIZED, '認証が必要です', 401);
     }
 
     return successResponse(data);

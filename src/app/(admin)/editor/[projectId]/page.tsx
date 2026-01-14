@@ -73,6 +73,7 @@ interface ProjectData {
     id: string;
     title: string;
     aspectRatio?: 'landscape' | 'portrait';
+    isPublished?: boolean;
   };
   nodes: ApiVideoNode[];
   choices: ApiChoice[];
@@ -92,6 +93,7 @@ export default function EditorPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [projectTitle, setProjectTitle] = useState('');
   const [aspectRatio, setAspectRatio] = useState<'landscape' | 'portrait'>('landscape');
+  const [isPublished, setIsPublished] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   const { isDirty, initializeEditor, selectedNodeId, nodes, edges, updateNode, setIsDirty } =
@@ -171,6 +173,7 @@ export default function EditorPage() {
       initializeEditor(projectId, flowNodes, flowEdges);
       setProjectTitle(data.project.title);
       setAspectRatio(data.project.aspectRatio || 'landscape');
+      setIsPublished(data.project.isPublished || false);
     } catch {
       alert('プロジェクトの読み込みに失敗しました');
     } finally {
@@ -230,6 +233,7 @@ export default function EditorPage() {
         body: JSON.stringify({
           title: projectTitle,
           aspectRatio: aspectRatio,
+          isPublished: isPublished,
           nodes: nodes.map((node) => ({
             id: node.id,
             type: node.type,
@@ -395,6 +399,18 @@ export default function EditorPage() {
               <SelectItem value="portrait">9:16 縦長</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* 公開トグル */}
+          {projectId !== 'new' && (
+            <Button
+              variant={isPublished ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setIsPublished(!isPublished)}
+              className={isPublished ? 'bg-green-600 hover:bg-green-700' : ''}
+            >
+              {isPublished ? '公開中' : '非公開'}
+            </Button>
+          )}
 
           <Button
             variant="outline"
