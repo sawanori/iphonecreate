@@ -435,7 +435,7 @@ export default function LandingPage() {
         </div>
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center bg-white rounded-3xl p-12 shadow-2xl shadow-[oklch(0.45_0.15_165)]/10">
-            <h2 className="mb-6 text-3xl font-extrabold sm:text-4xl lg:text-5xl gradient-text whitespace-nowrap">
+            <h2 className="mb-6 text-2xl font-extrabold sm:text-3xl lg:text-4xl gradient-text whitespace-nowrap">
               今すぐ始めましょう
             </h2>
             <p className="mx-auto mb-10 max-w-xl text-gray-600 text-lg leading-relaxed">
