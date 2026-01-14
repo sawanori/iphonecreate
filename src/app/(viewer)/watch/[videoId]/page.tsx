@@ -442,10 +442,11 @@ export default function WatchPage() {
             {/* Video player with crossfade support */}
             <div className={cn(
               "relative w-full",
+              data.project.aspectRatio === 'portrait' ? 'aspect-[9/16]' : 'aspect-video',
               isFullscreen && data.project.aspectRatio === 'portrait'
-                ? 'h-full max-h-screen aspect-[9/16]'
+                ? 'h-full max-h-screen'
                 : isFullscreen
-                  ? 'h-full max-w-full aspect-video'
+                  ? 'h-full max-w-full'
                   : ''
             )}>
               {/* Main VideoPlayer */}
