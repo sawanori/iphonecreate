@@ -17,24 +17,34 @@ export async function generateVideoThumbnail(
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
+    // CORSが設定されていない場合のフォールバック
+    // まずanonymousで試し、失敗した場合は別の方法を試す
     video.crossOrigin = 'anonymous';
-    video.preload = 'metadata';
+    video.preload = 'auto';
     video.muted = true;
     video.playsInline = true;
 
-    // タイムアウト設定（15秒）
+    // タイムアウト設定（20秒）
     const timeout = setTimeout(() => {
+      console.warn('[Thumbnail] Timeout: Video loading took too long');
       video.src = '';
       reject(new Error('Thumbnail generation timeout'));
-    }, 15000);
+    }, 20000);
 
     video.onseeked = () => {
       clearTimeout(timeout);
+      console.log('[Thumbnail] Video seeked, capturing frame...');
 
       try {
         // キャンバスサイズを計算（アスペクト比維持）
         let width = video.videoWidth;
         let height = video.videoHeight;
+
+        if (width === 0 || height === 0) {
+          console.warn('[Thumbnail] Video dimensions are 0, cannot capture');
+          reject(new Error('Video dimensions are 0'));
+          return;
+        }
 
         if (width > maxWidth) {
           const ratio = maxWidth / width;
@@ -60,8 +70,10 @@ export async function generateVideoThumbnail(
             video.src = '';
 
             if (blob) {
+              console.log('[Thumbnail] Successfully generated thumbnail blob');
               resolve(blob);
             } else {
+              console.warn('[Thumbnail] Failed to generate blob');
               reject(new Error('Failed to generate thumbnail blob'));
             }
           },
@@ -69,25 +81,33 @@ export async function generateVideoThumbnail(
           0.85
         );
       } catch (error) {
+        console.error('[Thumbnail] Canvas error:', error);
         video.src = '';
         reject(error);
       }
     };
 
     video.onloadedmetadata = () => {
+      console.log(`[Thumbnail] Metadata loaded: ${video.videoWidth}x${video.videoHeight}, duration: ${video.duration}s`);
       // メタデータ読み込み後、指定時間にシーク
       // 動画の長さより長い場合は1秒にフォールバック
       const targetTime = video.duration > seekTime ? seekTime : Math.min(1, video.duration / 2);
       video.currentTime = targetTime;
     };
 
-    video.onerror = () => {
+    video.oncanplaythrough = () => {
+      console.log('[Thumbnail] Video can play through');
+    };
+
+    video.onerror = (e) => {
       clearTimeout(timeout);
+      console.error('[Thumbnail] Video error:', e, video.error);
       video.src = '';
-      reject(new Error('Failed to load video for thumbnail generation'));
+      reject(new Error(`Failed to load video: ${video.error?.message || 'Unknown error'}`));
     };
 
     // 動画読み込み開始
+    console.log('[Thumbnail] Starting to load video:', videoUrl);
     video.src = videoUrl;
     video.load();
   });
@@ -144,13 +164,21 @@ export async function generateAndUploadThumbnail(
   videoUrl: string,
   projectId: string
 ): Promise<string | undefined> {
+  console.log('[Thumbnail] Starting generateAndUploadThumbnail for:', videoUrl);
   try {
     const blob = await generateVideoThumbnail(videoUrl);
+    console.log('[Thumbnail] Blob generated, size:', blob.size);
     const thumbnailUrl = await uploadThumbnail(blob, projectId);
+    console.log('[Thumbnail] Upload successful:', thumbnailUrl);
     return thumbnailUrl;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn('Failed to generate thumbnail:', error);
+    console.error('[Thumbnail] Failed to generate/upload thumbnail:', error);
+    // CORSエラーの場合は特別なメッセージを出す
+    if (error instanceof Error) {
+      if (error.message.includes('tainted') || error.message.includes('CORS') || error.message.includes('cross-origin')) {
+        console.error('[Thumbnail] CORS issue detected. Please configure CORS on R2 bucket.');
+      }
+    }
     return undefined;
   }
 }

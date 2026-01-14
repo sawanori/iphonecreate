@@ -46,6 +46,7 @@ export function VideoSelector({
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
   const [newVideoTitle, setNewVideoTitle] = useState('');
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
+  const [thumbnailError, setThumbnailError] = useState<string | null>(null);
 
   // ライブラリを取得
   const fetchLibrary = useCallback(async () => {
@@ -73,15 +74,19 @@ export function VideoSelector({
   // アップロード完了時
   const handleUploadComplete = async (result: { videoUrl: string; fileKey: string }) => {
     setIsGeneratingThumbnail(true);
+    setThumbnailError(null);
 
     let thumbnailUrl: string | undefined;
 
     // サムネイル生成を試行
     try {
       thumbnailUrl = await generateAndUploadThumbnail(result.videoUrl, projectId);
+      if (!thumbnailUrl) {
+        setThumbnailError('サムネイル生成に失敗しました。動画は正常にアップロードされています。');
+      }
     } catch (error) {
       console.warn('Failed to generate thumbnail:', error);
-      // サムネイル生成失敗しても続行
+      setThumbnailError('サムネイル生成に失敗しました。CORS設定を確認してください。');
     }
 
     // ライブラリに追加
@@ -102,7 +107,7 @@ export function VideoSelector({
 
     setIsGeneratingThumbnail(false);
 
-    // 選択して閉じる
+    // サムネイルなしでも閉じる（ユーザーが明示的に閉じるまで待つ場合はここをコメントアウト）
     onVideoSelect(result.videoUrl, thumbnailUrl);
     onClose();
   };
@@ -167,6 +172,11 @@ export function VideoSelector({
             <div className="flex items-center justify-center gap-2 py-4 text-sm text-gray-600">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>サムネイルを生成中...</span>
+            </div>
+          )}
+          {thumbnailError && (
+            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+              <p className="text-sm text-amber-700 dark:text-amber-300">{thumbnailError}</p>
             </div>
           )}
         </TabsContent>
