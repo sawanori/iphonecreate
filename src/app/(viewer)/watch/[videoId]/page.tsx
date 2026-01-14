@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import {
   VideoPlayer,
@@ -15,6 +15,7 @@ import { useVideoStore } from '@/stores/videoStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Maximize, Minimize } from 'lucide-react';
 import type { Choice, VideoNode, BranchConfig, BranchEdge } from '@/types';
 
 /**
@@ -195,6 +196,10 @@ export default function WatchPage() {
   const [error, setError] = useState<string | null>(null);
   const [completion, setCompletion] = useState<CompletionState | null>(null);
 
+  // Fullscreen state
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   // Store state
   const { isChoiceVisible, choices, remainingTime, timeLimit, choiceHistory } =
     useVideoStore();
@@ -294,6 +299,34 @@ export default function WatchPage() {
     resetStore();
   }, [resetStore]);
 
+  // Fullscreen toggle handler
+  const toggleFullscreen = useCallback(async () => {
+    const container = videoContainerRef.current;
+    if (!container) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        await container.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (err) {
+      console.error('Fullscreen error:', err);
+    }
+  }, []);
+
+  // Fullscreen change listener
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
   // Loading display
   if (!data) {
     return (
@@ -356,42 +389,73 @@ export default function WatchPage() {
         data.project.aspectRatio === 'portrait' ? 'max-w-md' : 'max-w-5xl'
       )}>
         <BranchTransition isTransitioning={isTransitioning}>
-          <div className="relative rounded-lg overflow-hidden shadow-2xl">
-            {/* Video player */}
-            <VideoPlayer
-              url={currentVideoUrl}
-              playing={!isChoiceVisible && !isTransitioning}
-              onTimeReached={handleChoiceDisplayTime}
-              {...(currentNode?.choiceTimestamp != null && {
-                choiceDisplayTime: currentNode.choiceTimestamp,
-              })}
-              onEnded={handleVideoEnd}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onReady={() => { /* Video ready */ }}
-              controls={!isChoiceVisible}
-              aspectRatio={data.project.aspectRatio}
-            />
-
-            {/* Choice overlay */}
-            <ChoiceOverlay
-              choices={choices}
-              isVisible={isChoiceVisible}
-              onSelect={(choice) => handleChoiceSelect(choice)}
-              remainingTime={remainingTime}
-              timeLimit={timeLimit}
-            />
-
-            {/* Timer */}
-            {isChoiceVisible && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30">
-                <CountdownTimer
-                  onTimeout={handleTimeout}
-                  variant="compact"
-                  visible={isChoiceVisible}
-                />
-              </div>
+          <div
+            ref={videoContainerRef}
+            className={cn(
+              "relative rounded-lg overflow-hidden shadow-2xl bg-black",
+              isFullscreen && "flex items-center justify-center w-screen h-screen"
             )}
+          >
+            {/* Video player */}
+            <div className={cn(
+              "relative w-full",
+              isFullscreen && data.project.aspectRatio === 'portrait'
+                ? 'h-full max-h-screen aspect-[9/16]'
+                : isFullscreen
+                  ? 'h-full max-w-full aspect-video'
+                  : ''
+            )}>
+              <VideoPlayer
+                url={currentVideoUrl}
+                playing={!isChoiceVisible && !isTransitioning}
+                onTimeReached={handleChoiceDisplayTime}
+                {...(currentNode?.choiceTimestamp != null && {
+                  choiceDisplayTime: currentNode.choiceTimestamp,
+                })}
+                onEnded={handleVideoEnd}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onReady={() => { /* Video ready */ }}
+                controls={!isChoiceVisible && !isFullscreen}
+                aspectRatio={data.project.aspectRatio}
+              />
+
+              {/* Choice overlay */}
+              <ChoiceOverlay
+                choices={choices}
+                isVisible={isChoiceVisible}
+                onSelect={(choice) => handleChoiceSelect(choice)}
+                remainingTime={remainingTime}
+                timeLimit={timeLimit}
+              />
+
+              {/* Timer */}
+              {isChoiceVisible && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30">
+                  <CountdownTimer
+                    onTimeout={handleTimeout}
+                    variant="compact"
+                    visible={isChoiceVisible}
+                  />
+                </div>
+              )}
+
+              {/* Fullscreen toggle button */}
+              <button
+                onClick={toggleFullscreen}
+                className={cn(
+                  "absolute z-40 p-2 rounded-lg bg-black/50 hover:bg-black/70 text-white transition-all",
+                  isFullscreen ? "bottom-4 right-4" : "bottom-2 right-2"
+                )}
+                aria-label={isFullscreen ? "フルスクリーン解除" : "フルスクリーン"}
+              >
+                {isFullscreen ? (
+                  <Minimize className="w-6 h-6" />
+                ) : (
+                  <Maximize className="w-6 h-6" />
+                )}
+              </button>
+            </div>
           </div>
         </BranchTransition>
 
