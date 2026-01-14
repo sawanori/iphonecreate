@@ -230,10 +230,10 @@ export default function LandingPage() {
                   </div>
                   {/* Choice buttons */}
                   <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-row gap-2 sm:gap-4">
-                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.60_0.13_165)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.45_0.15_165)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
+                    <div className="rounded-lg sm:rounded-xl bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.60_0.13_165)] px-3 sm:px-6 py-1.5 sm:py-2.5 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-[oklch(0.45_0.15_165)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
                       選択肢 A
                     </div>
-                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.80_0.12_165)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
+                    <div className="rounded-lg sm:rounded-xl bg-gradient-to-r from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)] px-3 sm:px-6 py-1.5 sm:py-2.5 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-[oklch(0.80_0.12_165)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
                       選択肢 B
                     </div>
                   </div>
