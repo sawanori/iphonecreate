@@ -87,7 +87,6 @@ export function VideoPlayer({
 
   // 動画読み込み開始
   const handleStart = useCallback(() => {
-    setLoadingState('loading');
     setShowTapToPlay(false);
   }, []);
 
@@ -166,13 +165,6 @@ export function VideoPlayer({
         className
       )}
     >
-      {/* ローディング表示 */}
-      {loadingState === 'loading' && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent" />
-        </div>
-      )}
-
       {/* エラー表示 */}
       {loadingState === 'error' && (
         <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
