@@ -222,12 +222,12 @@ export function useVideoPlayer({
         performance.now() - transitionStartTimeRef.current;
       void transitionDurationActual;
 
-      // 50ms後に状態をクリア（最小限の遅延）
+      // 500ms後に状態をクリア（クロスフェード時間と同期）
       setTimeout(() => {
         setIsLoading(false);
         setIsTransitioning(false);
         setIsPlaying(true);
-      }, 50);
+      }, 500);
     },
     [
       currentNodeId,

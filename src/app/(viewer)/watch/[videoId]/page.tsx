@@ -205,6 +205,11 @@ export default function WatchPage() {
     useVideoStore();
   const { setIsPlaying, reset: resetStore } = useVideoStore();
 
+  // Crossfade states for seamless video transitions
+  const [nextVideoUrl, setNextVideoUrl] = useState<string | null>(null);
+  const [isNextVideoReady, setIsNextVideoReady] = useState(false);
+  const [showNextVideo, setShowNextVideo] = useState(false);
+
   // Load data from API
   useEffect(() => {
     let isMounted = true;
@@ -292,6 +297,44 @@ export default function WatchPage() {
     onEnd: handleEnd,
     selectionDelay: 5000, // 選択後5秒待ってから遷移
   });
+
+  // Crossfade selection handler - sets up next video for preloading
+  const handleChoiceSelectWithPreload = useCallback((choice: Choice) => {
+    // Find target node ID from branch edges
+    const targetNodeId = data?.branchEdges.find(
+      e => e.sourceNodeId === currentNode?.id && e.choiceId === choice.id
+    )?.targetNodeId;
+
+    if (targetNodeId) {
+      const targetNode = data?.nodes.find(n => n.id === targetNodeId);
+      if (targetNode?.videoUrl) {
+        setNextVideoUrl(targetNode.videoUrl);
+        setIsNextVideoReady(false);
+        setShowNextVideo(false);
+      }
+    }
+
+    handleChoiceSelect(choice);
+  }, [handleChoiceSelect, data?.branchEdges, data?.nodes, currentNode?.id]);
+
+  // Crossfade effect - triggers crossfade when next video is ready
+  useEffect(() => {
+    if (!isNextVideoReady || !nextVideoUrl) {
+      return;
+    }
+
+    // Start fade-in of next video
+    setShowNextVideo(true);
+
+    // After 500ms (fade complete), clean up crossfade state
+    const timer = setTimeout(() => {
+      setNextVideoUrl(null);
+      setShowNextVideo(false);
+      setIsNextVideoReady(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [isNextVideoReady, nextVideoUrl]);
 
   // Rewatch handler
   const handleRewatch = useCallback(() => {
@@ -396,7 +439,7 @@ export default function WatchPage() {
               isFullscreen && "flex items-center justify-center w-screen h-screen"
             )}
           >
-            {/* Video player */}
+            {/* Video player with crossfade support */}
             <div className={cn(
               "relative w-full",
               isFullscreen && data.project.aspectRatio === 'portrait'
@@ -405,27 +448,50 @@ export default function WatchPage() {
                   ? 'h-full max-w-full aspect-video'
                   : ''
             )}>
-              <VideoPlayer
-                url={currentVideoUrl}
-                hasUserInteracted={choiceHistory.length > 0}
-                playing={!isChoiceVisible}
-                onTimeReached={handleChoiceDisplayTime}
-                {...(currentNode?.choiceTimestamp != null && {
-                  choiceDisplayTime: currentNode.choiceTimestamp,
-                })}
-                onEnded={handleVideoEnd}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onReady={() => { /* Video ready */ }}
-                controls={!isChoiceVisible && !isFullscreen}
-                aspectRatio={data.project.aspectRatio}
-              />
+              {/* Main VideoPlayer */}
+              <div className={cn(
+                "absolute inset-0 transition-opacity duration-500",
+                showNextVideo ? "opacity-0" : "opacity-100"
+              )}>
+                <VideoPlayer
+                  url={currentVideoUrl}
+                  hasUserInteracted={choiceHistory.length > 0}
+                  playing={!isChoiceVisible && !showNextVideo}
+                  onTimeReached={handleChoiceDisplayTime}
+                  {...(currentNode?.choiceTimestamp != null && {
+                    choiceDisplayTime: currentNode.choiceTimestamp,
+                  })}
+                  onEnded={handleVideoEnd}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  onReady={() => { /* Video ready */ }}
+                  controls={!isChoiceVisible && !isFullscreen}
+                  aspectRatio={data.project.aspectRatio}
+                />
+              </div>
+
+              {/* Next VideoPlayer for crossfade preload */}
+              {nextVideoUrl && (
+                <div className={cn(
+                  "absolute inset-0 transition-opacity duration-500",
+                  showNextVideo ? "opacity-100" : "opacity-0"
+                )}>
+                  <VideoPlayer
+                    url={nextVideoUrl}
+                    hasUserInteracted={true}
+                    playing={showNextVideo}
+                    onReady={() => setIsNextVideoReady(true)}
+                    controls={false}
+                    aspectRatio={data.project.aspectRatio}
+                  />
+                </div>
+              )}
 
               {/* Choice overlay */}
               <ChoiceOverlay
                 choices={choices}
                 isVisible={isChoiceVisible}
-                onSelect={(choice) => handleChoiceSelect(choice)}
+                onSelect={(choice) => handleChoiceSelectWithPreload(choice)}
                 remainingTime={remainingTime}
                 timeLimit={timeLimit}
               />
