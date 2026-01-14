@@ -290,15 +290,34 @@ export function useVideoPlayer({
       // 遷移時間計測開始
       transitionStartTimeRef.current = performance.now();
 
+      // デバッグログ
+      console.log('[useVideoPlayer] handleChoiceSelect:', {
+        choiceId: choice.id,
+        choiceLabel: choice.label,
+        currentNodeId,
+        branchEdgesCount: branchEdges.length,
+        branchEdges: branchEdges.map(e => ({ choiceId: e.choiceId, sourceNodeId: e.sourceNodeId, targetNodeId: e.targetNodeId })),
+      });
+
       // コールバック
       onChoice?.(currentNodeId, choice, isTimeout);
 
       // BranchEdge経由で次のノードIDを解決
       const targetNodeId = resolveTargetNodeId(choice.id, currentNodeId);
-      if (!targetNodeId) return;
+      console.log('[useVideoPlayer] resolvedTargetNodeId:', targetNodeId);
+
+      if (!targetNodeId) {
+        console.error('[useVideoPlayer] No targetNodeId found for choice:', choice.id);
+        return;
+      }
 
       const targetNode = nodes.find((n) => n.id === targetNodeId);
-      if (!targetNode) return;
+      console.log('[useVideoPlayer] targetNode:', targetNode ? { id: targetNode.id, videoUrl: targetNode.videoUrl } : null);
+
+      if (!targetNode) {
+        console.error('[useVideoPlayer] No targetNode found for id:', targetNodeId);
+        return;
+      }
 
       // 選択確認モードを開始
       confirmSelection(choice.id);

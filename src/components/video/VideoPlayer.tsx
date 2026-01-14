@@ -74,6 +74,11 @@ export function VideoPlayer({
   const [loadingState, setLoadingState] = useState<VideoLoadingState>('idle');
   const [hasTriggeredTimeReached, setHasTriggeredTimeReached] = useState(false);
 
+  // URLが空の場合のログ
+  if (!url) {
+    console.warn('[VideoPlayer] Empty URL provided');
+  }
+
   // 動画読み込み開始
   const handleStart = useCallback(() => {
     setLoadingState('loading');
@@ -88,13 +93,14 @@ export function VideoPlayer({
   // エラー処理
   const handleError = useCallback(
     (error: unknown) => {
+      console.error('[VideoPlayer] Error loading video:', { url, error });
       setLoadingState('error');
       // react-playerのエラーはunknown型で渡されることがあるため、Error型に変換
       const errorInstance =
         error instanceof Error ? error : new Error(String(error));
       onError?.(errorInstance);
     },
-    [onError]
+    [onError, url]
   );
 
   // 再生位置更新

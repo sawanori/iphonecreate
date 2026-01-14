@@ -218,11 +218,25 @@ export default function WatchPage() {
 
         const { data: apiData } = (await response.json()) as { data: ApiProjectData };
 
+        // デバッグログ
+        console.log('[WatchPage] API data received:', {
+          projectId: apiData.project.id,
+          startNodeId: apiData.project.startNodeId,
+          nodesCount: apiData.nodes.length,
+          nodes: apiData.nodes.map(n => ({ id: n.id, type: n.type, videoUrl: n.videoUrl })),
+        });
+
         if (isMounted) {
           const transformed = transformApiData(apiData);
+          console.log('[WatchPage] Transformed data:', {
+            startNodeId: transformed.startNodeId,
+            nodesCount: transformed.nodes.length,
+            firstNode: transformed.nodes[0],
+          });
           setData(transformed);
         }
       } catch (err) {
+        console.error('[WatchPage] Error loading data:', err);
         if (isMounted) {
           setError(err instanceof Error ? err.message : '動画データの読み込みに失敗しました');
         }
