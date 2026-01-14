@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -25,15 +26,42 @@ interface NavItem {
 }
 
 /**
- * Admin layout with pop sidebar navigation
+ * Admin layout with responsive sidebar navigation
  */
 export function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
+
+  // Close sidebar on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsSidebarOpen(false);
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isSidebarOpen]);
 
   const navItems: NavItem[] = [
-    { href: '/dashboard', label: 'Dashboard', icon: 'chart' },
-    { href: '/editor', label: 'Projects', icon: 'folder' },
+    { href: '/dashboard', label: 'ダッシュボード', icon: 'chart' },
+    { href: '/editor', label: 'プロジェクト', icon: 'folder' },
   ];
 
   /**
@@ -81,9 +109,53 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex bg-[oklch(0.98_0.005_280)]">
+    <div className="min-h-screen bg-[oklch(0.98_0.005_280)]">
+      {/* Mobile Header */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 h-16">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-md" />
+            <span className="text-lg font-bold bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] bg-clip-text text-transparent">
+              InteractiveFlow
+            </span>
+          </Link>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+            aria-label={isSidebarOpen ? 'メニューを閉じる' : 'メニューを開く'}
+            aria-expanded={isSidebarOpen}
+          >
+            {isSidebarOpen ? (
+              <svg className="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+          onClick={() => setIsSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col border-r border-gray-100" style={{ boxShadow: '4px 0 20px -5px rgba(0, 0, 0, 0.05)' }}>
+      <aside
+        className={cn(
+          'fixed top-0 left-0 z-50 h-full w-72 bg-white flex flex-col border-r border-gray-100 transition-transform duration-300 ease-out',
+          'lg:translate-x-0',
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+        style={{ boxShadow: '4px 0 20px -5px rgba(0, 0, 0, 0.05)' }}
+      >
         {/* Logo */}
         <div className="p-6 border-b border-gray-100">
           <Link href="/dashboard" className="flex items-center gap-3">
@@ -95,9 +167,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4" aria-label="Main navigation">
+        <nav className="flex-1 p-4" aria-label="メインナビゲーション">
           <p className="px-4 mb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Menu
+            メニュー
           </p>
           <ul className="space-y-2">
             {navItems.map((item) => {
@@ -145,7 +217,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     'h-2 w-2 rounded-full',
                     user?.role === 'admin' ? 'bg-[oklch(0.75_0.18_25)]' : 'bg-[oklch(0.78_0.16_195)]'
                   )} />
-                  {user?.role}
+                  {user?.role === 'admin' ? '管理者' : '視聴者'}
                 </p>
               </div>
             </div>
@@ -158,14 +230,20 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
-              Logout
+              ログアウト
             </Button>
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className={cn(
+        'min-h-screen transition-all duration-300',
+        'pt-16 lg:pt-0', // Mobile header spacing
+        'lg:ml-72' // Sidebar spacing on desktop
+      )}>
+        {children}
+      </main>
     </div>
   );
 }
