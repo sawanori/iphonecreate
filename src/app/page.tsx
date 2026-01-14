@@ -167,12 +167,12 @@ export default function LandingPage() {
               <div className="flex items-center gap-3">
                 <Link href="/login?callbackUrl=/dashboard">
                   <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100/50 rounded-xl font-medium">
-                    Login
+                    ログイン
                   </Button>
                 </Link>
                 <Link href="/login?callbackUrl=/dashboard">
                   <Button className="bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-xl font-semibold shadow-lg shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-xl">
-                    Start Free
+                    無料で始める
                   </Button>
                 </Link>
               </div>
@@ -196,7 +196,7 @@ export default function LandingPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[oklch(0.82_0.14_165)] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-[oklch(0.82_0.14_165)]"></span>
               </span>
-              <span className="text-gray-700 font-medium">Next-Gen Training Platform</span>
+              <span className="text-gray-700 font-medium">次世代トレーニングプラットフォーム</span>
             </div>
 
             {/* Heading */}
@@ -207,11 +207,11 @@ export default function LandingPage() {
               )}
             >
               <span className="text-gray-900">
-                Transform Learning with
+                インタラクティブ動画で
               </span>
               <br />
               <span className="gradient-text-sunset inline-block mt-2">
-                Interactive Videos
+                学習体験を変革する
               </span>
             </h1>
 
@@ -222,8 +222,8 @@ export default function LandingPage() {
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               )}
             >
-              Create branching video content where viewers choose their own path.
-              Deliver immersive learning experiences that traditional videos cannot achieve.
+              視聴者が自ら選択しながら学ぶ、分岐する動画コンテンツを作成。
+              従来の動画では実現できなかった没入感のある学習体験を提供します。
             </p>
 
             {/* CTA Buttons */}
@@ -238,7 +238,7 @@ export default function LandingPage() {
                   size="lg"
                   className="h-16 px-10 text-lg bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-2xl font-semibold shadow-xl shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
                 >
-                  Get Started Free
+                  無料で始める
                   <svg className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -252,7 +252,7 @@ export default function LandingPage() {
                 <svg className="mr-2 h-6 w-6 text-[oklch(0.75_0.18_25)]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
-                Watch Demo
+                デモを見る
               </Button>
             </div>
           </div>
@@ -281,16 +281,16 @@ export default function LandingPage() {
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
-                      <p className="text-gray-500 font-medium">Interactive Video Player</p>
+                      <p className="text-gray-500 font-medium">インタラクティブ動画プレイヤー</p>
                     </div>
                   </div>
                   {/* Choice buttons */}
                   <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4">
                     <div className="rounded-2xl bg-gradient-to-r from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)] px-8 py-4 text-white font-semibold shadow-xl shadow-[oklch(0.78_0.16_195)]/30 hover:scale-105 transition-transform cursor-pointer">
-                      Choice A
+                      選択肢 A
                     </div>
                     <div className="rounded-2xl bg-gradient-to-r from-[oklch(0.65_0.22_295)] to-[oklch(0.75_0.18_25)] px-8 py-4 text-white font-semibold shadow-xl shadow-[oklch(0.65_0.22_295)]/30 hover:scale-105 transition-transform cursor-pointer">
-                      Choice B
+                      選択肢 B
                     </div>
                   </div>
                 </div>
@@ -306,10 +306,10 @@ export default function LandingPage() {
           <div className="rounded-3xl bg-white p-8 md:p-12 shadow-xl">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               {[
-                { value: 98, suffix: '%', label: 'Learning Retention', color: 'from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)]' },
-                { value: 3, suffix: 'x', label: 'Engagement Rate', color: 'from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)]' },
-                { value: 500, suffix: '+', label: 'Companies', color: 'from-[oklch(0.90_0.18_95)] to-[oklch(0.75_0.18_25)]' },
-                { value: 50000, suffix: '+', label: 'Videos Created', color: 'from-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)]' },
+                { value: 98, suffix: '%', label: '学習定着率の向上', color: 'from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)]' },
+                { value: 3, suffix: '倍', label: 'エンゲージメント', color: 'from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)]' },
+                { value: 500, suffix: '+', label: '導入企業', color: 'from-[oklch(0.90_0.18_95)] to-[oklch(0.75_0.18_25)]' },
+                { value: 50000, suffix: '+', label: '作成された動画', color: 'from-[oklch(0.65_0.22_295)] to-[oklch(0.78_0.16_195)]' },
               ].map((stat, index) => (
                 <div key={index} className="text-center group">
                   <div className={cn(
@@ -331,13 +331,13 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="mb-6 text-3xl font-extrabold sm:text-4xl lg:text-5xl">
-              Everything You Need
+              必要な機能がすべて揃った
               <span className="block gradient-text mt-2">
-                All-in-One Platform
+                オールインワンプラットフォーム
               </span>
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              From creation to distribution and analytics. All the tools you need in one place.
+              動画の作成から配信、分析まで。必要なツールがすべて一箇所に。
             </p>
           </div>
 
@@ -350,8 +350,8 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
               }
-              title="Visual Editor"
-              description="Create branching videos with drag & drop. No coding required."
+              title="ビジュアルエディター"
+              description="ドラッグ&ドロップで分岐動画を直感的に作成。プログラミング知識は不要です。"
             />
             <FeatureCard
               delay={200}
@@ -361,8 +361,8 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               }
-              title="Deep Analytics"
-              description="Visualize viewer choice patterns and drop-off points for data-driven improvements."
+              title="詳細な分析"
+              description="視聴者の選択パターンや離脱ポイントを可視化。データドリブンな改善が可能に。"
             />
             <FeatureCard
               delay={300}
@@ -372,8 +372,8 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
               }
-              title="Responsive Design"
-              description="Optimal viewing experience on PC, tablet, and smartphone."
+              title="レスポンシブ対応"
+              description="PC、タブレット、スマートフォン。あらゆるデバイスで最適な視聴体験を提供。"
             />
             <FeatureCard
               delay={400}
@@ -383,8 +383,8 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               }
-              title="Global CDN"
-              description="Fast content delivery from anywhere in the world."
+              title="高速配信"
+              description="グローバルCDNで世界中どこからでも高速にコンテンツを配信。"
             />
             <FeatureCard
               delay={500}
@@ -394,8 +394,8 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               }
-              title="Enterprise Security"
-              description="Securely manage your valuable content with enterprise-grade security."
+              title="セキュア"
+              description="エンタープライズグレードのセキュリティで大切なコンテンツを安全に管理。"
             />
             <FeatureCard
               delay={600}
@@ -405,8 +405,8 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               }
-              title="Team Management"
-              description="Smooth collaboration with role-based access control."
+              title="チーム管理"
+              description="役割ベースのアクセス制御で、チームでの共同作業もスムーズに。"
             />
           </div>
         </div>
@@ -418,11 +418,11 @@ export default function LandingPage() {
         <div className="container relative mx-auto px-4">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="mb-6 text-3xl font-extrabold sm:text-4xl lg:text-5xl">
-              <span className="gradient-text-ocean">3 Simple Steps</span>
-              <span className="block text-gray-900 mt-2">to Get Started</span>
+              <span className="gradient-text-ocean">3ステップ</span>
+              <span className="block text-gray-900 mt-2">で始められる</span>
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              No complex setup required. Start creating interactive videos right away.
+              複雑な設定は不要。すぐにインタラクティブ動画を作成できます。
             </p>
           </div>
 
@@ -430,22 +430,22 @@ export default function LandingPage() {
             <StepCard
               number={1}
               color="coral"
-              title="Upload Your Video"
-              description="Drag and drop your existing video files. MP4 format supported."
+              title="動画をアップロード"
+              description="既存の動画ファイルをドラッグ&ドロップでアップロード。MP4形式に対応しています。"
             />
             <div className="ml-7 h-16 w-0.5 bg-gradient-to-b from-[oklch(0.75_0.18_25)] via-[oklch(0.78_0.16_195)] to-transparent rounded-full" />
             <StepCard
               number={2}
               color="cyan"
-              title="Set Up Branches"
-              description="Configure branch points and choices in the visual editor. Flowchart view for easy overview."
+              title="分岐を設定"
+              description="ビジュアルエディターで分岐ポイントと選択肢を設定。フローチャート形式で全体像を把握できます。"
             />
             <div className="ml-7 h-16 w-0.5 bg-gradient-to-b from-[oklch(0.78_0.16_195)] via-[oklch(0.65_0.22_295)] to-transparent rounded-full" />
             <StepCard
               number={3}
               color="purple"
-              title="Publish & Share"
-              description="One-click publish. Share the URL and viewers can start watching immediately."
+              title="公開・共有"
+              description="ワンクリックで公開。URLを共有するだけで、誰でもすぐに視聴を開始できます。"
             />
           </div>
         </div>
@@ -459,17 +459,17 @@ export default function LandingPage() {
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center bg-white rounded-3xl p-12 shadow-2xl shadow-[oklch(0.75_0.18_25)]/10">
             <h2 className="mb-6 text-3xl font-extrabold sm:text-4xl lg:text-5xl gradient-text">
-              Start Today
+              今すぐ始めましょう
             </h2>
             <p className="mx-auto mb-10 max-w-xl text-gray-600 text-lg leading-relaxed">
-              Get started with our free plan now. No credit card required.
+              無料プランで今すぐスタート。クレジットカードは不要です。
             </p>
             <Link href="/login?callbackUrl=/dashboard">
               <Button
                 size="lg"
                 className="h-16 px-12 text-lg bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-2xl font-semibold shadow-xl shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
               >
-                Create Free Account
+                無料アカウントを作成
                 <svg className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -488,17 +488,17 @@ export default function LandingPage() {
               <span className="text-xl font-bold gradient-text">InteractiveFlow</span>
             </div>
             <p className="text-gray-500 text-sm">
-              Copyright 2026 InteractiveFlow. All rights reserved.
+              © 2026 InteractiveFlow. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-gray-500 hover:text-[oklch(0.75_0.18_25)] transition-colors font-medium">
-                Privacy
+                プライバシー
               </a>
               <a href="#" className="text-gray-500 hover:text-[oklch(0.75_0.18_25)] transition-colors font-medium">
-                Terms
+                利用規約
               </a>
               <a href="#" className="text-gray-500 hover:text-[oklch(0.75_0.18_25)] transition-colors font-medium">
-                Contact
+                お問い合わせ
               </a>
             </div>
           </div>
