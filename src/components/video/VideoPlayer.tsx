@@ -14,6 +14,8 @@ import type { VideoLoadingState } from '@/types';
 export interface VideoPlayerProps {
   /** 動画URL */
   url: string;
+  /** ユーザーが既に操作済みか（分岐後などはtrue） */
+  hasUserInteracted?: boolean;
   /** 再生開始時のコールバック */
   onPlay?: () => void;
   /** 一時停止時のコールバック */
@@ -54,6 +56,7 @@ export interface VideoPlayerProps {
  */
 export function VideoPlayer({
   url,
+  hasUserInteracted = false,
   onPlay,
   onPause,
   onEnded,
@@ -98,10 +101,11 @@ export function VideoPlayer({
   // エラー処理
   const handleError = useCallback(
     (error: unknown) => {
-      console.error('[VideoPlayer] Error loading video:', { url, error, retryCount });
+      console.error('[VideoPlayer] Error loading video:', { url, error, retryCount, hasUserInteracted });
 
-      // 初回エラー時はモバイルでの自動再生失敗の可能性があるため、タップして再生を表示
-      if (retryCount === 0) {
+      // ユーザーが既に操作済み（分岐後など）の場合はエラー表示
+      // 初回でユーザー未操作の場合はタップして再生を表示
+      if (retryCount === 0 && !hasUserInteracted) {
         setShowTapToPlay(true);
         setLoadingState('ready'); // エラー状態にせず、タップ待ち状態に
         return;
@@ -113,7 +117,7 @@ export function VideoPlayer({
         error instanceof Error ? error : new Error(String(error));
       onError?.(errorInstance);
     },
-    [onError, url, retryCount]
+    [onError, url, retryCount, hasUserInteracted]
   );
 
   // タップして再生
