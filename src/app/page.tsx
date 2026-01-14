@@ -7,39 +7,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 /**
- * Animated counter with bounce effect
- */
-function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, duration / steps);
-
-    return () => clearInterval(timer);
-  }, [target]);
-
-  return (
-    <span>
-      {count.toLocaleString()}
-      {suffix}
-    </span>
-  );
-}
-
-/**
  * Pop Feature Card with hover effects
  */
 function FeatureCard({
@@ -272,32 +239,6 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="relative py-20">
-        <div className="container mx-auto px-4">
-          <div className="rounded-3xl bg-white p-8 md:p-12 shadow-xl">
-            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-              {[
-                { value: 98, suffix: '%', label: '学習定着率の向上', color: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]' },
-                { value: 3, suffix: '倍', label: 'エンゲージメント', color: 'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]' },
-                { value: 500, suffix: '+', label: '導入企業', color: 'from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)]' },
-                { value: 50000, suffix: '+', label: '作成された動画', color: 'from-[oklch(0.80_0.12_165)] to-[oklch(0.45_0.15_165)]' },
-              ].map((stat, index) => (
-                <div key={index} className="text-center group">
-                  <div className={cn(
-                    'mb-3 text-4xl sm:text-5xl font-extrabold bg-gradient-to-r bg-clip-text text-transparent transition-transform group-hover:scale-110',
-                    stat.color
-                  )}>
-                    {mounted && <AnimatedCounter target={stat.value} suffix={stat.suffix} />}
-                  </div>
-                  <p className="text-gray-600 font-medium">{stat.label}</p>
-                </div>
-              ))}
             </div>
           </div>
         </div>
