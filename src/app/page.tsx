@@ -164,18 +164,11 @@ export default function LandingPage() {
                   InteractiveFlow
                 </span>
               </div>
-              <div className="flex items-center gap-3">
-                <Link href="/login?callbackUrl=/dashboard">
-                  <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100/50 rounded-xl font-medium">
-                    ログイン
-                  </Button>
-                </Link>
-                <Link href="/login?callbackUrl=/dashboard">
-                  <Button className="bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-xl font-semibold shadow-lg shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-xl">
-                    無料で始める
-                  </Button>
-                </Link>
-              </div>
+              <Link href="/login?callbackUrl=/dashboard">
+                <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100/50 rounded-xl font-medium">
+                  ログイン
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
