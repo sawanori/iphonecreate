@@ -208,17 +208,17 @@ export default function LandingPage() {
             {/* CTA Buttons */}
             <div
               className={cn(
-                'flex flex-row flex-wrap items-center justify-center gap-4 transition-all duration-700 delay-300',
+                'flex flex-row items-center justify-center gap-3 sm:gap-4 transition-all duration-700 delay-300',
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               )}
             >
               <Link href="/login?callbackUrl=/dashboard">
                 <Button
                   size="lg"
-                  className="h-16 px-10 text-lg bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-2xl font-semibold shadow-xl shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
+                  className="h-12 px-4 text-sm sm:h-16 sm:px-10 sm:text-lg bg-gradient-to-r from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] hover:opacity-90 text-white rounded-xl sm:rounded-2xl font-semibold shadow-xl shadow-[oklch(0.75_0.18_25)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
                 >
                   無料で始める
-                  <svg className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="ml-1 sm:ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Button>
@@ -226,9 +226,9 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="h-16 px-10 text-lg border-2 border-gray-200 bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-2xl font-semibold transition-all hover:scale-105 group"
+                className="h-12 px-4 text-sm sm:h-16 sm:px-10 sm:text-lg border-2 border-gray-200 bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl sm:rounded-2xl font-semibold transition-all hover:scale-105 group"
               >
-                <svg className="mr-2 h-6 w-6 text-[oklch(0.75_0.18_25)]" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="mr-1 sm:mr-2 h-5 w-5 sm:h-6 sm:w-6 text-[oklch(0.75_0.18_25)]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
                 デモを見る
