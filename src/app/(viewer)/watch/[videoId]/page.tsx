@@ -209,6 +209,8 @@ export default function WatchPage() {
   const [nextVideoUrl, setNextVideoUrl] = useState<string | null>(null);
   const [isNextVideoReady, setIsNextVideoReady] = useState(false);
   const [showNextVideo, setShowNextVideo] = useState(false);
+  const [isNextVideoPlaying, setIsNextVideoPlaying] = useState(false); // 次の動画を先行再生
+  const preplayTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load data from API
   useEffect(() => {
@@ -300,6 +302,12 @@ export default function WatchPage() {
 
   // Crossfade selection handler - sets up next video for preloading
   const handleChoiceSelectWithPreload = useCallback((choice: Choice) => {
+    // Clear any existing timer
+    if (preplayTimerRef.current) {
+      clearTimeout(preplayTimerRef.current);
+      preplayTimerRef.current = null;
+    }
+
     // Find target node ID from branch edges
     const targetNodeId = data?.branchEdges.find(
       e => e.sourceNodeId === currentNode?.id && e.choiceId === choice.id
@@ -311,30 +319,62 @@ export default function WatchPage() {
         setNextVideoUrl(targetNode.videoUrl);
         setIsNextVideoReady(false);
         setShowNextVideo(false);
+        setIsNextVideoPlaying(false);
+
+        // 4秒後（5秒のリードタイムの80%）に次の動画を先行再生開始
+        // ロードに十分な時間を確保しつつ、フェードイン前に1秒再生
+        preplayTimerRef.current = setTimeout(() => {
+          setIsNextVideoPlaying(true);
+        }, 4000);
       }
     }
 
     handleChoiceSelect(choice);
   }, [handleChoiceSelect, data?.branchEdges, data?.nodes, currentNode?.id]);
 
-  // Crossfade effect - triggers crossfade when next video is ready
+  // Cleanup preplay timer on unmount
   useEffect(() => {
-    if (!isNextVideoReady || !nextVideoUrl) {
+    return () => {
+      if (preplayTimerRef.current) {
+        clearTimeout(preplayTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Crossfade effect - triggers crossfade when next video is ready AND playing
+  useEffect(() => {
+    // フェードイン条件: 動画がready かつ 再生中
+    if (!isNextVideoReady || !nextVideoUrl || !isNextVideoPlaying) {
       return;
     }
 
     // Start fade-in of next video
     setShowNextVideo(true);
+  }, [isNextVideoReady, nextVideoUrl, isNextVideoPlaying]);
 
-    // After 500ms (fade complete), clean up crossfade state
-    const timer = setTimeout(() => {
+  // Clean up crossfade when main video URL changes to the next video
+  useEffect(() => {
+    if (!nextVideoUrl || currentVideoUrl !== nextVideoUrl) {
+      return;
+    }
+
+    // Clear preplay timer
+    if (preplayTimerRef.current) {
+      clearTimeout(preplayTimerRef.current);
+      preplayTimerRef.current = null;
+    }
+
+    // Wait a bit for main player to load before removing the overlay
+    // This prevents a flash of black while main player catches up
+    const cleanupTimer = setTimeout(() => {
       setNextVideoUrl(null);
       setShowNextVideo(false);
       setIsNextVideoReady(false);
-    }, 500);
+      setIsNextVideoPlaying(false);
+    }, 1000);
 
-    return () => clearTimeout(timer);
-  }, [isNextVideoReady, nextVideoUrl]);
+    return () => clearTimeout(cleanupTimer);
+  }, [currentVideoUrl, nextVideoUrl]);
 
   // Rewatch handler
   const handleRewatch = useCallback(() => {
@@ -480,10 +520,11 @@ export default function WatchPage() {
                   <VideoPlayer
                     url={nextVideoUrl}
                     hasUserInteracted={true}
-                    playing={showNextVideo}
+                    playing={isNextVideoPlaying}
                     onReady={() => setIsNextVideoReady(true)}
                     controls={false}
                     aspectRatio={data.project.aspectRatio}
+                    muted={!showNextVideo}
                   />
                 </div>
               )}
