@@ -21,3 +21,6 @@ export type { NodeToolbarProps } from './NodeToolbar';
 
 export { ChoiceEditor } from './ChoiceEditor';
 export type { EditorChoice, TargetNode } from './ChoiceEditor';
+
+export { EditorProjectCard } from './EditorProjectCard';
+export { EditorProjectGrid } from './EditorProjectGrid';
