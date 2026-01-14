@@ -218,25 +218,11 @@ export default function WatchPage() {
 
         const { data: apiData } = (await response.json()) as { data: ApiProjectData };
 
-        // デバッグログ
-        console.log('[WatchPage] API data received:', {
-          projectId: apiData.project.id,
-          startNodeId: apiData.project.startNodeId,
-          nodesCount: apiData.nodes.length,
-          nodes: apiData.nodes.map(n => ({ id: n.id, type: n.type, videoUrl: n.videoUrl })),
-        });
-
         if (isMounted) {
           const transformed = transformApiData(apiData);
-          console.log('[WatchPage] Transformed data:', {
-            startNodeId: transformed.startNodeId,
-            nodesCount: transformed.nodes.length,
-            firstNode: transformed.nodes[0],
-          });
           setData(transformed);
         }
       } catch (err) {
-        console.error('[WatchPage] Error loading data:', err);
         if (isMounted) {
           setError(err instanceof Error ? err.message : '動画データの読み込みに失敗しました');
         }
@@ -304,7 +290,7 @@ export default function WatchPage() {
     onTransitionComplete: handleTransitionComplete,
     onChoice: handleChoice,
     onEnd: handleEnd,
-    selectionDelay: 2500, // 選択後2.5秒待ってから遷移
+    selectionDelay: 5000, // 選択後5秒待ってから遷移
   });
 
   // Rewatch handler
@@ -324,8 +310,8 @@ export default function WatchPage() {
       } else {
         await document.exitFullscreen();
       }
-    } catch (err) {
-      console.error('Fullscreen error:', err);
+    } catch {
+      // Fullscreen not supported or denied - silently ignore
     }
   }, []);
 

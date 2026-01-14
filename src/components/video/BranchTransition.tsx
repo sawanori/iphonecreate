@@ -41,7 +41,6 @@ export function BranchTransition({
   onComplete,
   children,
   className,
-  loadingText = 'Loading next video...',
 }: BranchTransitionProps) {
   const [phase, setPhase] = useState<'idle' | 'out' | 'in'>('idle');
 
@@ -106,28 +105,6 @@ export function BranchTransition({
         {children}
       </div>
 
-      {/* 遷移オーバーレイ */}
-      {isTransitioning && (
-        <div
-          className={cn(
-            'absolute inset-0 bg-black z-30',
-            'flex items-center justify-center',
-            phase === 'out' ? 'animate-in fade-in' : 'animate-out fade-out'
-          )}
-          style={{ animationDuration: `${duration / 2}ms` }}
-          data-testid="branch-transition-overlay"
-          role="status"
-          aria-live="polite"
-        >
-          <div className="text-white text-center">
-            <div
-              className="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent mx-auto mb-4"
-              aria-hidden="true"
-            />
-            <p className="text-lg">{loadingText}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
