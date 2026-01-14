@@ -24,6 +24,8 @@ export type VideoNodeData = {
   videoUrl?: string;
   /** サムネイルURL */
   thumbnailUrl?: string;
+  /** 動画のアスペクト比 */
+  aspectRatio?: 'landscape' | 'portrait';
   /** 選択肢リスト */
   choices?: Array<{ id: string; text: string }>;
   /** 制限時間（秒） */
@@ -68,7 +70,12 @@ export const VideoNode = memo(function VideoNode({
       <CardContent className="p-3 pt-0">
         {/* サムネイル/動画プレビュー */}
         {data.thumbnailUrl ? (
-          <div className="aspect-video bg-gray-200 rounded overflow-hidden mb-2 relative">
+          <div
+            className={cn(
+              'bg-gray-200 rounded overflow-hidden mb-2 relative',
+              data.aspectRatio === 'portrait' ? 'aspect-[9/16]' : 'aspect-video'
+            )}
+          >
             <Image
               src={data.thumbnailUrl}
               alt={data.title}

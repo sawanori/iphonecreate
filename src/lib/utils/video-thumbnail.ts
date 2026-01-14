@@ -4,17 +4,25 @@
  */
 
 /**
+ * サムネイル生成結果
+ */
+export interface ThumbnailResult {
+  blob: Blob;
+  aspectRatio: 'landscape' | 'portrait';
+}
+
+/**
  * 動画URLからサムネイルを生成
  * @param videoUrl - 動画URL
  * @param seekTime - キャプチャする時間（秒、デフォルト: 1秒）
  * @param maxWidth - 最大幅（デフォルト: 640px）
- * @returns サムネイルのBlob
+ * @returns サムネイルのBlobとアスペクト比
  */
 export async function generateVideoThumbnail(
   videoUrl: string,
   seekTime = 1,
   maxWidth = 640
-): Promise<Blob> {
+): Promise<ThumbnailResult> {
   // 早期バリデーション
   if (!videoUrl || videoUrl.trim() === '') {
     console.error('[Thumbnail] Empty video URL provided');
@@ -87,13 +95,18 @@ export async function generateVideoThumbnail(
 
         ctx.drawImage(video, 0, 0, width, height);
 
+        // アスペクト比を判定（元の動画サイズで判定）
+        const aspectRatio: 'landscape' | 'portrait' =
+          video.videoWidth >= video.videoHeight ? 'landscape' : 'portrait';
+        console.log('[Thumbnail] Detected aspect ratio:', aspectRatio, `(${video.videoWidth}x${video.videoHeight})`);
+
         canvas.toBlob(
           (blob) => {
             cleanup();
 
             if (blob) {
               console.log('[Thumbnail] Successfully generated thumbnail blob, size:', blob.size);
-              resolve(blob);
+              resolve({ blob, aspectRatio });
             } else {
               console.warn('[Thumbnail] Failed to generate blob');
               reject(new Error('Failed to generate thumbnail blob'));
@@ -180,23 +193,31 @@ export async function uploadThumbnail(
 }
 
 /**
+ * サムネイルアップロード結果
+ */
+export interface ThumbnailUploadResult {
+  thumbnailUrl: string;
+  aspectRatio: 'landscape' | 'portrait';
+}
+
+/**
  * 動画からサムネイルを生成してアップロード
  * 失敗した場合はundefinedを返す（エラーをスロー せず）
  * @param videoUrl - 動画URL
  * @param projectId - プロジェクトID
- * @returns サムネイルURLまたはundefined
+ * @returns サムネイルURLとアスペクト比、または失敗時はundefined
  */
 export async function generateAndUploadThumbnail(
   videoUrl: string,
   projectId: string
-): Promise<string | undefined> {
+): Promise<ThumbnailUploadResult | undefined> {
   console.log('[Thumbnail] Starting generateAndUploadThumbnail for:', videoUrl);
   try {
-    const blob = await generateVideoThumbnail(videoUrl);
-    console.log('[Thumbnail] Blob generated, size:', blob.size);
+    const { blob, aspectRatio } = await generateVideoThumbnail(videoUrl);
+    console.log('[Thumbnail] Blob generated, size:', blob.size, 'aspectRatio:', aspectRatio);
     const thumbnailUrl = await uploadThumbnail(blob, projectId);
     console.log('[Thumbnail] Upload successful:', thumbnailUrl);
-    return thumbnailUrl;
+    return { thumbnailUrl, aspectRatio };
   } catch (error) {
     console.error('[Thumbnail] Failed to generate/upload thumbnail:', error);
     // CORSエラーの場合は特別なメッセージを出す

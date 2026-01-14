@@ -286,12 +286,15 @@ export default function EditorPage() {
   /**
    * Handle video selection (from upload or library)
    */
-  const handleVideoSelect = (videoUrl: string, thumbnailUrl?: string) => {
+  const handleVideoSelect = (videoUrl: string, thumbnailUrl?: string, aspectRatio?: 'landscape' | 'portrait') => {
     setUploadDialogOpen(false);
     if (selectedNodeId) {
-      const updateData: { videoUrl: string; thumbnailUrl?: string } = { videoUrl };
+      const updateData: { videoUrl: string; thumbnailUrl?: string; aspectRatio?: 'landscape' | 'portrait' } = { videoUrl };
       if (thumbnailUrl) {
         updateData.thumbnailUrl = thumbnailUrl;
+      }
+      if (aspectRatio) {
+        updateData.aspectRatio = aspectRatio;
       }
       updateNode(selectedNodeId, updateData);
     }

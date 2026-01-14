@@ -26,7 +26,7 @@ interface LibraryVideo {
 interface VideoSelectorProps {
   projectId: string;
   currentVideoUrl?: string | undefined;
-  onVideoSelect: (videoUrl: string, thumbnailUrl?: string) => void;
+  onVideoSelect: (videoUrl: string, thumbnailUrl?: string, aspectRatio?: 'landscape' | 'portrait') => void;
   onClose: () => void;
 }
 
@@ -79,14 +79,18 @@ export function VideoSelector({
     const ENABLE_THUMBNAIL_GENERATION = true;
 
     let thumbnailUrl: string | undefined;
+    let aspectRatio: 'landscape' | 'portrait' | undefined;
 
     if (ENABLE_THUMBNAIL_GENERATION && result.videoUrl) {
       setIsGeneratingThumbnail(true);
       setThumbnailError(null);
 
       try {
-        thumbnailUrl = await generateAndUploadThumbnail(result.videoUrl, projectId);
-        if (!thumbnailUrl) {
+        const thumbnailResult = await generateAndUploadThumbnail(result.videoUrl, projectId);
+        if (thumbnailResult) {
+          thumbnailUrl = thumbnailResult.thumbnailUrl;
+          aspectRatio = thumbnailResult.aspectRatio;
+        } else {
           setThumbnailError('サムネイル生成に失敗しました。動画は正常にアップロードされています。');
         }
       } catch (error) {
@@ -119,7 +123,7 @@ export function VideoSelector({
     setIsGeneratingThumbnail(false);
 
     // サムネイルなしでも閉じる（ユーザーが明示的に閉じるまで待つ場合はここをコメントアウト）
-    onVideoSelect(result.videoUrl, thumbnailUrl);
+    onVideoSelect(result.videoUrl, thumbnailUrl, aspectRatio);
     onClose();
   };
 
