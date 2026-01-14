@@ -254,21 +254,21 @@ export default function LandingPage() {
                 <div className="relative h-full w-full flex items-center justify-center">
                   {/* Play button */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-2xl shadow-[oklch(0.75_0.18_25)]/40 transition-transform hover:scale-110 cursor-pointer">
-                        <svg className="h-12 w-12 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="text-center px-4">
+                      <div className="mx-auto mb-4 sm:mb-6 flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.75_0.18_25)] to-[oklch(0.65_0.22_295)] shadow-2xl shadow-[oklch(0.75_0.18_25)]/40 transition-transform hover:scale-110 cursor-pointer">
+                        <svg className="h-8 w-8 sm:h-12 sm:w-12 text-white ml-0.5 sm:ml-1" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
-                      <p className="text-gray-500 font-medium">インタラクティブ動画プレイヤー</p>
+                      <p className="text-gray-500 font-medium text-xs sm:text-base">インタラクティブ動画プレイヤー</p>
                     </div>
                   </div>
                   {/* Choice buttons */}
-                  <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4">
-                    <div className="rounded-2xl bg-gradient-to-r from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)] px-8 py-4 text-white font-semibold shadow-xl shadow-[oklch(0.78_0.16_195)]/30 hover:scale-105 transition-transform cursor-pointer">
+                  <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-2 sm:gap-4 w-[calc(100%-2rem)] sm:w-auto">
+                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.78_0.16_195)] to-[oklch(0.82_0.14_165)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.78_0.16_195)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
                       選択肢 A
                     </div>
-                    <div className="rounded-2xl bg-gradient-to-r from-[oklch(0.65_0.22_295)] to-[oklch(0.75_0.18_25)] px-8 py-4 text-white font-semibold shadow-xl shadow-[oklch(0.65_0.22_295)]/30 hover:scale-105 transition-transform cursor-pointer">
+                    <div className="rounded-xl sm:rounded-2xl bg-gradient-to-r from-[oklch(0.65_0.22_295)] to-[oklch(0.75_0.18_25)] px-4 sm:px-8 py-2 sm:py-4 text-white text-sm sm:text-base font-semibold shadow-xl shadow-[oklch(0.65_0.22_295)]/30 hover:scale-105 transition-transform cursor-pointer text-center">
                       選択肢 B
                     </div>
                   </div>
