@@ -70,7 +70,10 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
     addEndNode,
     selectNode,
     deleteNode,
+    deleteEdge,
   } = useFlowEditor();
+
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
 
   // ReactFlow インスタンスを保存
   const onInit = useCallback((instance: ReactFlowInstance) => {
@@ -88,7 +91,27 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
   // ペーンクリック（選択解除）
   const onPaneClick = useCallback(() => {
     selectNode(null);
+    setSelectedEdgeId(null);
   }, [selectNode]);
+
+  // エッジクリック（選択 → 削除確認）
+  const onEdgeClick = useCallback(
+    (_: React.MouseEvent, edge: { id: string }) => {
+      if (readOnly) return;
+
+      // モバイルの場合は確認ダイアログを表示
+      if (isMobile) {
+        if (window.confirm('この接続を削除しますか？')) {
+          deleteEdge(edge.id);
+        }
+      } else {
+        // デスクトップはエッジを選択（Delete/Backspaceで削除）
+        setSelectedEdgeId(edge.id);
+        selectNode(null);
+      }
+    },
+    [readOnly, isMobile, deleteEdge, selectNode]
+  );
 
   // モバイル用：クリックでノード追加（ビューポート中央付近にランダム配置）
   const handleAddVideoNodeClick = useCallback(() => {
@@ -145,10 +168,13 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
       if (event.key === 'Delete' || event.key === 'Backspace') {
         if (selectedNodeId) {
           deleteNode(selectedNodeId);
+        } else if (selectedEdgeId) {
+          deleteEdge(selectedEdgeId);
+          setSelectedEdgeId(null);
         }
       }
     },
-    [readOnly, selectedNodeId, deleteNode]
+    [readOnly, selectedNodeId, selectedEdgeId, deleteNode, deleteEdge]
   );
 
   // readOnly時は変更ハンドラーを無効化
@@ -172,6 +198,7 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
         {...editableProps}
         onInit={onInit}
         onNodeClick={onNodeClick}
+        onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
         onDrop={onDrop}
         onDragOver={onDragOver}
@@ -182,6 +209,7 @@ export function FlowEditor({ className, readOnly = false }: FlowEditorProps) {
         nodesDraggable={!readOnly}
         nodesConnectable={!readOnly}
         elementsSelectable={!readOnly}
+        edgesFocusable={!readOnly}
         panOnScroll={!isMobile}
         panOnDrag={isMobile}
         selectionOnDrag={!isMobile}
