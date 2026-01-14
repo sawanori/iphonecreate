@@ -441,17 +441,19 @@ export default function LandingPage() {
             <p className="mx-auto mb-10 max-w-xl text-gray-600 text-lg leading-relaxed">
               無料プランで今すぐスタート。クレジットカードは不要です。
             </p>
-            <Link href="/login?callbackUrl=/dashboard">
-              <Button
-                size="lg"
-                className="h-16 px-12 text-lg bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white rounded-2xl font-semibold shadow-xl shadow-[oklch(0.45_0.15_165)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
-              >
-                無料アカウントを作成
-                <svg className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Button>
-            </Link>
+            <div className="flex justify-center">
+              <Link href="/login?callbackUrl=/dashboard">
+                <Button
+                  size="lg"
+                  className="h-16 px-12 text-lg bg-gradient-to-r from-[oklch(0.45_0.15_165)] to-[oklch(0.80_0.12_165)] hover:opacity-90 text-white rounded-2xl font-semibold shadow-xl shadow-[oklch(0.45_0.15_165)]/30 transition-all hover:scale-105 hover:shadow-2xl group"
+                >
+                  無料アカウントを作成
+                  <svg className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
