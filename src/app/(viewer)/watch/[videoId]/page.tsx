@@ -302,6 +302,12 @@ export default function WatchPage() {
 
   // Crossfade selection handler - sets up next video for preloading
   const handleChoiceSelectWithPreload = useCallback((choice: Choice) => {
+    console.log('[Crossfade] handleChoiceSelectWithPreload called', {
+      choiceId: choice.id,
+      currentNodeId: currentNode?.id,
+      currentVideoUrl,
+    });
+
     // Clear any existing timer
     if (preplayTimerRef.current) {
       clearTimeout(preplayTimerRef.current);
@@ -313,24 +319,31 @@ export default function WatchPage() {
       e => e.sourceNodeId === currentNode?.id && e.choiceId === choice.id
     )?.targetNodeId;
 
+    console.log('[Crossfade] targetNodeId found:', targetNodeId);
+
     if (targetNodeId) {
       const targetNode = data?.nodes.find(n => n.id === targetNodeId);
+      console.log('[Crossfade] targetNode:', { id: targetNode?.id, videoUrl: targetNode?.videoUrl });
+
       if (targetNode?.videoUrl) {
         setNextVideoUrl(targetNode.videoUrl);
         setIsNextVideoReady(false);
         setShowNextVideo(false);
         setIsNextVideoPlaying(false);
 
+        console.log('[Crossfade] nextVideoUrl set to:', targetNode.videoUrl);
+
         // 4秒後（5秒のリードタイムの80%）に次の動画を先行再生開始
         // ロードに十分な時間を確保しつつ、フェードイン前に1秒再生
         preplayTimerRef.current = setTimeout(() => {
+          console.log('[Crossfade] 4s timer fired, setting isNextVideoPlaying = true');
           setIsNextVideoPlaying(true);
         }, 4000);
       }
     }
 
     handleChoiceSelect(choice);
-  }, [handleChoiceSelect, data?.branchEdges, data?.nodes, currentNode?.id]);
+  }, [handleChoiceSelect, data?.branchEdges, data?.nodes, currentNode?.id, currentVideoUrl]);
 
   // Cleanup preplay timer on unmount
   useEffect(() => {
@@ -343,20 +356,27 @@ export default function WatchPage() {
 
   // Crossfade effect - triggers crossfade when next video is ready AND playing
   useEffect(() => {
+    console.log('[Crossfade] Effect check:', { isNextVideoReady, nextVideoUrl: !!nextVideoUrl, isNextVideoPlaying });
+
     // フェードイン条件: 動画がready かつ 再生中
     if (!isNextVideoReady || !nextVideoUrl || !isNextVideoPlaying) {
       return;
     }
 
+    console.log('[Crossfade] All conditions met, starting fade-in');
     // Start fade-in of next video
     setShowNextVideo(true);
   }, [isNextVideoReady, nextVideoUrl, isNextVideoPlaying]);
 
   // Clean up crossfade when main video URL changes to the next video
   useEffect(() => {
+    console.log('[Crossfade] Cleanup check:', { currentVideoUrl, nextVideoUrl, match: currentVideoUrl === nextVideoUrl });
+
     if (!nextVideoUrl || currentVideoUrl !== nextVideoUrl) {
       return;
     }
+
+    console.log('[Crossfade] URLs match, scheduling cleanup');
 
     // Clear preplay timer
     if (preplayTimerRef.current) {
@@ -367,6 +387,7 @@ export default function WatchPage() {
     // Wait a bit for main player to load before removing the overlay
     // This prevents a flash of black while main player catches up
     const cleanupTimer = setTimeout(() => {
+      console.log('[Crossfade] Cleanup executing');
       setNextVideoUrl(null);
       setShowNextVideo(false);
       setIsNextVideoReady(false);
@@ -521,7 +542,10 @@ export default function WatchPage() {
                     url={nextVideoUrl}
                     hasUserInteracted={true}
                     playing={isNextVideoPlaying}
-                    onReady={() => setIsNextVideoReady(true)}
+                    onReady={() => {
+                      console.log('[Crossfade] Next VideoPlayer onReady called');
+                      setIsNextVideoReady(true);
+                    }}
                     controls={false}
                     aspectRatio={data.project.aspectRatio}
                     muted={!showNextVideo}
