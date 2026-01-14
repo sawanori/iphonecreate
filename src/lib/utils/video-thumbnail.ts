@@ -162,7 +162,8 @@ export async function uploadThumbnail(
     throw new Error('Failed to get thumbnail upload URL');
   }
 
-  const { uploadUrl, thumbnailUrl } = await response.json();
+  const { data } = await response.json();
+  const { uploadUrl, thumbnailUrl } = data;
 
   // 2. R2にアップロード
   const uploadResponse = await fetch(uploadUrl, {
