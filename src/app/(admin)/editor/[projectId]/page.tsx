@@ -192,6 +192,9 @@ export default function EditorPage() {
     setIsSaving(true);
 
     try {
+      let targetProjectId = projectId;
+
+      // Create new project first if needed
       if (projectId === 'new') {
         const createResponse = await fetch('/api/videos', {
           method: 'POST',
@@ -204,8 +207,7 @@ export default function EditorPage() {
         }
 
         const { data } = await createResponse.json();
-        router.push(`/editor/${data.project.id}`);
-        return;
+        targetProjectId = data.project.id;
       }
 
       // Collect all choices from nodes
@@ -232,7 +234,7 @@ export default function EditorPage() {
         (node) => node.type === 'videoNode' && node.data?.thumbnailUrl
       )?.data?.thumbnailUrl as string | undefined;
 
-      const updateResponse = await fetch(`/api/videos/${projectId}`, {
+      const updateResponse = await fetch(`/api/videos/${targetProjectId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -261,11 +263,17 @@ export default function EditorPage() {
 
       if (!updateResponse.ok) {
         const errorData = await updateResponse.json().catch(() => null);
-        console.error('Save error:', errorData);
         throw new Error(errorData?.message || 'Failed to save project');
       }
 
       setIsDirty(false);
+
+      // Redirect to the new project page if this was a new project
+      if (projectId === 'new') {
+        router.push(`/editor/${targetProjectId}`);
+        return;
+      }
+
       alert('保存しました');
     } catch {
       alert('プロジェクトの保存に失敗しました');
