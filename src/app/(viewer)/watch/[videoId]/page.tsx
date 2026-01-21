@@ -89,7 +89,7 @@ interface CompletionState {
  * Transform API data to player format
  */
 function transformApiData(apiData: ApiProjectData): PlayerData {
-  const { project, nodes, choices, branchConfigs } = apiData;
+  const { project, nodes, choices, branchConfigs, edges } = apiData;
 
   // Find start node (specified, or first video node, or first node)
   const videoNodes = nodes.filter(
@@ -102,11 +102,21 @@ function transformApiData(apiData: ApiProjectData): PlayerData {
   const transformedNodes = nodes.map((node): VideoNode => {
     const nodeChoices = choices
       .filter((c) => c.nodeId === node.id)
-      .map((c) => ({
-        id: c.id,
-        label: c.label,
-        nextNodeId: c.targetNodeId || '',
-      }));
+      .map((c) => {
+        // choiceにtargetNodeIdがあればそれを使う、なければedgesから探す
+        let nextNodeId = c.targetNodeId;
+        if (!nextNodeId) {
+          const edge = edges.find((e) => e.sourceNodeId === c.nodeId);
+          if (edge) {
+            nextNodeId = edge.targetNodeId;
+          }
+        }
+        return {
+          id: c.id,
+          label: c.label,
+          nextNodeId: nextNodeId || '',
+        };
+      });
 
     const config = branchConfigs.find((bc) => bc.nodeId === node.id);
 
@@ -138,11 +148,21 @@ function transformApiData(apiData: ApiProjectData): PlayerData {
     .map((node) => {
       const nodeChoices = choices
         .filter((c) => c.nodeId === node.id)
-        .map((c) => ({
-          id: c.id,
-          label: c.label,
-          nextNodeId: c.targetNodeId || '',
-        }));
+        .map((c) => {
+          // choiceにtargetNodeIdがあればそれを使う、なければedgesから探す
+          let nextNodeId = c.targetNodeId;
+          if (!nextNodeId) {
+            const edge = edges.find((e) => e.sourceNodeId === c.nodeId);
+            if (edge) {
+              nextNodeId = edge.targetNodeId;
+            }
+          }
+          return {
+            id: c.id,
+            label: c.label,
+            nextNodeId: nextNodeId || '',
+          };
+        });
       const config = branchConfigs.find((bc) => bc.nodeId === node.id);
 
       return {
@@ -154,18 +174,28 @@ function transformApiData(apiData: ApiProjectData): PlayerData {
     });
 
   // Transform choices to BranchEdge format
-  // NOTE: Build branchEdges directly from choices with targetNodeId set.
-  // This ensures choiceId is always correctly populated for video transitions.
-  // Previously we tried to match edges to choices, but that failed when
-  // choice.targetNodeId didn't match the visual edge connection.
+  // choiceにtargetNodeIdがある場合はそれを使う
+  // なければedgesからsourceNodeIdが一致するedgeを探してtargetNodeIdを使う
   const transformedEdges: BranchEdge[] = choices
-    .filter((c) => c.targetNodeId) // Only choices with a target set
-    .map((choice) => ({
-      id: choice.id, // Use choice ID as edge ID
-      sourceNodeId: choice.nodeId,
-      targetNodeId: choice.targetNodeId!,
-      choiceId: choice.id,
-    }));
+    .map((choice) => {
+      let targetNodeId = choice.targetNodeId;
+      if (!targetNodeId) {
+        // edgesからこのノードから出ているエッジを探す
+        const edge = edges.find((e) => e.sourceNodeId === choice.nodeId);
+        if (edge) {
+          targetNodeId = edge.targetNodeId;
+        }
+      }
+      if (!targetNodeId) return null;
+
+      return {
+        id: choice.id,
+        sourceNodeId: choice.nodeId,
+        targetNodeId: targetNodeId,
+        choiceId: choice.id,
+      };
+    })
+    .filter((edge): edge is BranchEdge => edge !== null);
 
   // Title/description helpers
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
