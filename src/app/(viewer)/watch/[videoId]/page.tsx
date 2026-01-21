@@ -102,13 +102,13 @@ function transformApiData(apiData: ApiProjectData): PlayerData {
   const transformedNodes = nodes.map((node): VideoNode => {
     const nodeChoices = choices
       .filter((c) => c.nodeId === node.id)
-      .map((c) => {
-        // choiceにtargetNodeIdがあればそれを使う、なければedgesから探す
+      .map((c, _index, arr) => {
         let nextNodeId = c.targetNodeId;
-        if (!nextNodeId) {
-          const edge = edges.find((e) => e.sourceNodeId === c.nodeId);
-          if (edge) {
-            nextNodeId = edge.targetNodeId;
+        // 選択肢が1つだけで、targetNodeIdが未設定の場合のみedgesから探す
+        if (!nextNodeId && arr.length === 1) {
+          const nodeEdges = edges.filter((e) => e.sourceNodeId === node.id);
+          if (nodeEdges.length === 1) {
+            nextNodeId = nodeEdges[0].targetNodeId;
           }
         }
         return {
@@ -148,13 +148,13 @@ function transformApiData(apiData: ApiProjectData): PlayerData {
     .map((node) => {
       const nodeChoices = choices
         .filter((c) => c.nodeId === node.id)
-        .map((c) => {
-          // choiceにtargetNodeIdがあればそれを使う、なければedgesから探す
+        .map((c, _index, arr) => {
           let nextNodeId = c.targetNodeId;
-          if (!nextNodeId) {
-            const edge = edges.find((e) => e.sourceNodeId === c.nodeId);
-            if (edge) {
-              nextNodeId = edge.targetNodeId;
+          // 選択肢が1つだけで、targetNodeIdが未設定の場合のみedgesから探す
+          if (!nextNodeId && arr.length === 1) {
+            const nodeEdges = edges.filter((e) => e.sourceNodeId === node.id);
+            if (nodeEdges.length === 1) {
+              nextNodeId = nodeEdges[0].targetNodeId;
             }
           }
           return {
@@ -175,15 +175,16 @@ function transformApiData(apiData: ApiProjectData): PlayerData {
 
   // Transform choices to BranchEdge format
   // choiceにtargetNodeIdがある場合はそれを使う
-  // なければedgesからsourceNodeIdが一致するedgeを探してtargetNodeIdを使う
+  // 選択肢が1つだけで、targetNodeIdが未設定の場合のみedgesから探す
   const transformedEdges: BranchEdge[] = choices
     .map((choice) => {
       let targetNodeId = choice.targetNodeId;
-      if (!targetNodeId) {
-        // edgesからこのノードから出ているエッジを探す
-        const edge = edges.find((e) => e.sourceNodeId === choice.nodeId);
-        if (edge) {
-          targetNodeId = edge.targetNodeId;
+      // 選択肢が1つだけで、targetNodeIdが未設定の場合のみedgesから探す
+      const sameNodeChoices = choices.filter((c) => c.nodeId === choice.nodeId);
+      if (!targetNodeId && sameNodeChoices.length === 1) {
+        const nodeEdges = edges.filter((e) => e.sourceNodeId === choice.nodeId);
+        if (nodeEdges.length === 1) {
+          targetNodeId = nodeEdges[0].targetNodeId;
         }
       }
       if (!targetNodeId) return null;
